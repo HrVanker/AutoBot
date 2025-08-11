@@ -1,13 +1,13 @@
 {
     "bot_token": "MTQwMzQ1NDQ2NTI2ODI1MjcyMw.GlFCtE.SGJncEw4YmMJqZgU8yvYzQfhhUssQHxJ-RFrKs",
     "guild_id": "1402464831935877240",
-    "mod_role_id": "1402797400225087509",
+    "mod_role_id": "1404607997631795271",
     "log_channel_id": "1402872850397790218",
     "auto_promotion": {
     "enabled": true,
-    "source_role_id": "1402795927533519000",
-    "target_role_id": "1402480191745298485",
+    "source_role_id": "1404602773538082986",
+    "target_role_id": "1404604815153303713",
     "vc_threshold_minutes": 600,
     "message_threshold": 500,
     "promotion_logic": "AND"
-} }
+    } }
