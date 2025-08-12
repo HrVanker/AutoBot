@@ -2,8 +2,8 @@
 from discord.ext import commands
 from datetime import datetime
 from utils import database
-from utils.logger import log_action
-from utils.role_utils import handle_role_add # <-- IMPORT THE NEW HANDLER
+# We no longer need to import log_action here
+from utils.role_utils import handle_role_add
 
 class ActivityTrackerCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -12,58 +12,41 @@ class ActivityTrackerCog(commands.Cog):
         self.vc_join_times = {}
 
     async def _check_promotion(self, member: discord.Member):
-        if not self.config.get("enabled", False):
-            return
-
+        # ... (This function's logic remains mostly the same until the end)
+        if not self.config.get("enabled", False): return
         source_role_id = int(self.config.get("source_role_id", 0))
         target_role_id = int(self.config.get("target_role_id", 0))
-        if not source_role_id or not target_role_id:
-            return
-
+        if not source_role_id or not target_role_id: return
         source_role = member.guild.get_role(source_role_id)
         target_role = member.guild.get_role(target_role_id)
-        if not source_role or not target_role:
-            print("Error: Auto-promotion source or target role not found in the server.")
-            return
-
-        if source_role not in member.roles or target_role in member.roles:
-            return
-
+        if not source_role or not target_role: return
+        if source_role not in member.roles or target_role in member.roles: return
         msg_threshold = self.config.get("message_threshold", 500)
         vc_min_threshold = self.config.get("vc_threshold_minutes", 600)
         logic = self.config.get("promotion_logic", "AND").upper()
         message_count, vc_time = database.get_user_activity(member.id)
-        
         met_messages = message_count >= msg_threshold
         met_vc_time = vc_time >= vc_min_threshold
+        should_promote = (logic == "AND" and met_messages and met_vc_time) or \
+                         (logic == "OR" and (met_messages or met_vc_time))
+        if not should_promote: return
 
-        should_promote = False
-        if logic == "AND":
-            should_promote = met_messages and met_vc_time
-        elif logic == "OR":
-            should_promote = met_messages or met_vc_time
-
-        if not should_promote:
-            return
-
-        # ▼▼▼ USE THE NEW HANDLER ▼▼▼
-        # The handle_role_add function now removes the source role for us.
-        await handle_role_add(self.bot, member, target_role, "Automatic promotion")
-        # ▲▲▲ USE THE NEW HANDLER ▲▲▲
-        
-        await log_action(
+        # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼
+        await handle_role_add(
             bot=self.bot,
-            title="Automatic User Promotion",
-            target_user=member,
-            responsible_party="System (Automatic)",
-            details=f"Promoted to {target_role.mention}. (Messages: {message_count}, VC Time: {vc_time} mins)"
+            member=member,
+            role_to_add=target_role,
+            reason="Automatic promotion",
+            log_title="Automatic User Promotion",
+            log_responsible_party=f"System (Messages: {message_count}, VC Time: {vc_time} mins)"
         )
+        # ▲▲▲ CONSOLIDATED LOGGING CALL ▲▲▲
+        # The separate log_action call that was here has been REMOVED.
 
-    # (on_message and on_voice_state_update do not need to change)
+    # ... (on_message and on_voice_state_update are unchanged)
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.author.bot or not message.guild or message.content.startswith('/'):
-            return
+        if message.author.bot or not message.guild or message.content.startswith('/'): return
         database.update_user_activity(message.author.id, messages=1)
         await self._check_promotion(message.author)
 
@@ -83,29 +66,26 @@ class ActivityTrackerCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        if not self.config.get("enabled", False):
-            return
-
+        if not self.config.get("enabled", False): return
         source_role_id = int(self.config.get("source_role_id", 0))
-        if not source_role_id:
-            return
-
+        if not source_role_id: return
         role = member.guild.get_role(source_role_id)
         if not role:
             print(f"Error: Auto-assign role with ID {source_role_id} not found.")
             return
         
-        # ▼▼▼ USE THE NEW HANDLER ▼▼▼
-        await handle_role_add(self.bot, member, role, "New member autorole")
-        # ▲▲▲ USE THE NEW HANDLER ▲▲▲
-        
-        await log_action(
+        # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼
+        await handle_role_add(
             bot=self.bot,
-            title="Automatic Role Assigned (New Member)",
-            target_user=member,
-            responsible_party="System (Automatic)",
-            details=f"Assigned starting role: {role.mention}"
+            member=member,
+            role_to_add=role,
+            reason="New member autorole",
+            log_title="New Member Role Assigned",
+            log_responsible_party="System (Automatic)"
         )
+        # ▲▲▲ CONSOLIDATED LOGGING CALL ▲▲▲
+        # The separate log_action call that was here has been REMOVED.
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ActivityTrackerCog(bot))

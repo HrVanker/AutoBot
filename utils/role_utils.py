@@ -1,14 +1,16 @@
-import discord
+﻿import discord
 from .logger import log_action
 
-async def handle_role_add(bot, member: discord.Member, role_to_add: discord.Role, reason: str):
+async def handle_role_add(bot, member: discord.Member, role_to_add: discord.Role, reason: str, log_title: str, log_responsible_party: str):
     """
     A centralized handler for adding roles.
-    It adds the specified role and automatically removes any conflicting roles
-    as defined in the config's 'toggled_roles'.
+    It adds the specified role, removes conflicting roles, and sends a single,
+    consolidated log message.
     """
     if role_to_add in member.roles:
         return # The user already has the role, do nothing.
+
+    removed_role = None # Variable to store the role that gets removed
 
     try:
         # 1. Add the new role
@@ -19,7 +21,6 @@ async def handle_role_add(bot, member: discord.Member, role_to_add: discord.Role
         role_to_add_id = str(role_to_add.id)
         conflicting_role_id_str = None
 
-        # Check for conflicts in both directions (key->value and value->key)
         if role_to_add_id in toggles:
             conflicting_role_id_str = toggles[role_to_add_id]
         else:
@@ -31,18 +32,24 @@ async def handle_role_add(bot, member: discord.Member, role_to_add: discord.Role
         # 3. If a conflicting role exists and the user has it, remove it
         if conflicting_role_id_str:
             conflicting_role_id = int(conflicting_role_id_str)
-            conflicting_role = member.guild.get_role(conflicting_role_id)
+            conflicting_role_obj = member.guild.get_role(conflicting_role_id)
 
-            if conflicting_role and conflicting_role in member.roles:
-                await member.remove_roles(conflicting_role, reason=f"Toggled by adding {role_to_add.name}")
-                # Log the secondary removal
-                await log_action(
-                    bot=bot,
-                    title="Automatic Role Removed (Toggle)",
-                    target_user=member,
-                    responsible_party="System (Automatic)",
-                    details=f"Removed {conflicting_role.mention} because {role_to_add.mention} was added."
-                )
+            if conflicting_role_obj and conflicting_role_obj in member.roles:
+                await member.remove_roles(conflicting_role_obj, reason=f"Toggled by adding {role_to_add.name}")
+                removed_role = conflicting_role_obj # Save the removed role for logging
+
+        # 4. Construct and send the single log message
+        details = f"✅ Added Role: {role_to_add.mention}"
+        if removed_role:
+            details += f"\n❌ Removed Toggled Role: {removed_role.mention}"
+
+        await log_action(
+            bot=bot,
+            title=log_title,
+            target_user=member,
+            responsible_party=log_responsible_party,
+            details=details
+        )
 
     except discord.Forbidden:
         print(f"Error: Bot lacks permissions to manage roles for {member.name}.")

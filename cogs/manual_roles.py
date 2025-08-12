@@ -1,8 +1,8 @@
 ﻿import discord
 from discord.ext import commands
 from discord import app_commands
-from utils.logger import log_action
-from utils.role_utils import handle_role_add # <-- IMPORT THE NEW HANDLER
+# We no longer need to import log_action here
+from utils.role_utils import handle_role_add 
 
 class ManualRolesCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -33,24 +33,27 @@ class ManualRolesCog(commands.Cog):
             )
             return
         
-        # ▼▼▼ USE THE NEW HANDLER ▼▼▼
-        reason_text = f"Role added by {interaction.user.name}"
-        await handle_role_add(self.bot, user, role, reason_text)
-        # ▲▲▲ USE THE NEW HANDLER ▲▲▲
+        # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼
+        reason_text = f"Role change initiated by {interaction.user.name}"
+        await handle_role_add(
+            bot=self.bot, 
+            member=user, 
+            role_to_add=role, 
+            reason=reason_text,
+            log_title="Manual Role Change", # New title
+            log_responsible_party=interaction.user.mention # Pass who did it
+        )
+        # ▲▲▲ CONSOLIDATED LOGGING CALL ▲▲▲
 
         await interaction.response.send_message(f"Successfully processed the **{role.name}** role for {user.mention}.", ephemeral=True)
-        await log_action(
-            bot=self.bot,
-            title="Manual Role Added",
-            target_user=user,
-            responsible_party=interaction.user.mention,
-            details=f"Added Role: {role.mention}"
-        )
+        # The separate log_action call that was here has been REMOVED.
     
-    # (The 'remove_role' command does not need to change)
+    # The 'remove_role' command does not need to change
     @role_group.command(name="remove", description="Remove a role from a user.")
     @app_commands.describe(user="The user to remove the role from.", role="The role to remove.")
     async def remove_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role):
+        # (This function remains unchanged, as it only removes roles, no toggling)
+        from utils.logger import log_action # We need it here now
         if not self.is_moderator(interaction):
             await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
             return
