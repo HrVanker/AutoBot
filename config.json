@@ -12,11 +12,7 @@
         "promotion_logic": "AND"
     },
     "toggled_roles": {
-        //"This ROLE_ID negates" : "THIS ROLE_ID"
-        //
-        //    ROLE_ID: Regular       ROLE_ID: Rando
         "1404604815153303713": "1404602773538082986",
-        // ROLE_ID: OG          ROLE_ID: Regular
         "1404606604795449364": "1404604815153303713"
     }
 }
