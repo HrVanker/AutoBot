@@ -3,23 +3,22 @@ from discord.ext import commands
 from datetime import datetime
 from utils import database
 from utils.logger import log_action
+from utils.role_utils import handle_role_add # <-- IMPORT THE NEW HANDLER
 
 class ActivityTrackerCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.config = bot.config.get("auto_promotion", {})
-        self.vc_join_times = {} # Stores {user_id: join_time}
+        self.vc_join_times = {}
 
     async def _check_promotion(self, member: discord.Member):
-        """The core logic for checking if a user qualifies for promotion."""
         if not self.config.get("enabled", False):
             return
 
-        # --- Role ID setup ---
         source_role_id = int(self.config.get("source_role_id", 0))
         target_role_id = int(self.config.get("target_role_id", 0))
         if not source_role_id or not target_role_id:
-            return 
+            return
 
         source_role = member.guild.get_role(source_role_id)
         target_role = member.guild.get_role(target_role_id)
@@ -27,15 +26,12 @@ class ActivityTrackerCog(commands.Cog):
             print("Error: Auto-promotion source or target role not found in the server.")
             return
 
-        # --- Eligibility check ---
         if source_role not in member.roles or target_role in member.roles:
             return
 
-        # --- Threshold check ---
         msg_threshold = self.config.get("message_threshold", 500)
         vc_min_threshold = self.config.get("vc_threshold_minutes", 600)
         logic = self.config.get("promotion_logic", "AND").upper()
-
         message_count, vc_time = database.get_user_activity(member.id)
         
         met_messages = message_count >= msg_threshold
@@ -50,24 +46,20 @@ class ActivityTrackerCog(commands.Cog):
         if not should_promote:
             return
 
-        # --- Promote the user ---
-        try:
-            await member.remove_roles(source_role, reason="Automatic promotion")
-            await member.add_roles(target_role, reason="Automatic promotion")
-            
-            await log_action(
-                bot=self.bot,
-                title="Automatic User Promotion",
-                target_user=member,
-                responsible_party="System (Automatic)",
-                details=f"Promoted from {source_role.mention} to {target_role.mention}. "
-                        f"(Messages: {message_count}, VC Time: {vc_time} mins)"
-            )
-        except discord.Forbidden:
-            print(f"Error: Bot lacks permissions to promote {member.name}.")
-        except Exception as e:
-            print(f"An unexpected error occurred during promotion for {member.name}: {e}")
+        # ▼▼▼ USE THE NEW HANDLER ▼▼▼
+        # The handle_role_add function now removes the source role for us.
+        await handle_role_add(self.bot, member, target_role, "Automatic promotion")
+        # ▲▲▲ USE THE NEW HANDLER ▲▲▲
+        
+        await log_action(
+            bot=self.bot,
+            title="Automatic User Promotion",
+            target_user=member,
+            responsible_party="System (Automatic)",
+            details=f"Promoted to {target_role.mention}. (Messages: {message_count}, VC Time: {vc_time} mins)"
+        )
 
+    # (on_message and on_voice_state_update do not need to change)
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.author.bot or not message.guild or message.content.startswith('/'):
@@ -85,14 +77,12 @@ class ActivityTrackerCog(commands.Cog):
                 join_time = self.vc_join_times.pop(user_id)
                 duration_seconds = (datetime.utcnow() - join_time).total_seconds()
                 duration_minutes = round(duration_seconds / 60)
-                
                 if duration_minutes > 0:
                     database.update_user_activity(member.id, vc_minutes=duration_minutes)
                     await self._check_promotion(member)
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        """Automatically assigns the 'source role' to new members."""
         if not self.config.get("enabled", False):
             return
 
@@ -104,22 +94,18 @@ class ActivityTrackerCog(commands.Cog):
         if not role:
             print(f"Error: Auto-assign role with ID {source_role_id} not found.")
             return
+        
+        # ▼▼▼ USE THE NEW HANDLER ▼▼▼
+        await handle_role_add(self.bot, member, role, "New member autorole")
+        # ▲▲▲ USE THE NEW HANDLER ▲▲▲
+        
+        await log_action(
+            bot=self.bot,
+            title="Automatic Role Assigned (New Member)",
+            target_user=member,
+            responsible_party="System (Automatic)",
+            details=f"Assigned starting role: {role.mention}"
+        )
 
-        try:
-            await member.add_roles(role, reason="New member autorole")
-            await log_action(
-                bot=self.bot,
-                title="Automatic Role Assigned (New Member)",
-                target_user=member,
-                responsible_party="System (Automatic)",
-                details=f"Assigned starting role: {role.mention}"
-            )
-        except discord.Forbidden:
-            print(f"Error: Bot lacks permissions to assign the starting role to {member.name}.")
-        except Exception as e:
-            print(f"An unexpected error occurred while assigning role to {member.name}: {e}")
-
-# This function is the entry point that discord.py looks for when loading a cog.
-# It MUST be in the file and NOT indented.
 async def setup(bot: commands.Bot):
     await bot.add_cog(ActivityTrackerCog(bot))

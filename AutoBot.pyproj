@@ -27,6 +27,7 @@
     <Compile Include="cogs\manual_roles.py" />
     <Compile Include="utils\database.py" />
     <Compile Include="utils\logger.py" />
+    <Compile Include="utils\role_utils.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="cogs\" />
