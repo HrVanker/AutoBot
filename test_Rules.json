@@ -1,0 +1,30 @@
+﻿{
+    "title": "📜 Server Rules & Guidelines",
+    "description": "Welcome! To maintain a productive environment for debate and mingling, please follow the guidelines listed below.",
+    "color": 5793266,
+    "fields": [
+        {
+            "name": "**1: Be Respectful**",
+            "value": "> Treat all members with respect. Harassment, hate speech, or discrimination will not be tolerated.\n> - -# This includes abuse of media/bot permissions, spamming text, noise trolling, etc."
+        },
+        {
+            "name": "**2: Discord ToS**",
+            "value": "> All activity on this server must comply with Discord's Terms of Service (ToS)."
+        },
+        {
+            "name": "**3: NSFW Content**",
+            "value": "> Pornography is prohibited outside of designated, age-restricted channels."
+        },
+        {
+            "name": "**4: This server is 18+**",
+            "value": "> Anyone tjought to be under 18 will be removed from the server."
+        },
+        {
+            "name": "Enforcement:",
+            "value": "> Ultimately, we aim to be pretty self-governed. But, server Guides will utilize timeouts and bans to address continued or severe infractions of these guidelines."
+        }
+    ],
+    "footer": {
+        "text": "We appreciate your cooperation! ☮️"
+    }
+}

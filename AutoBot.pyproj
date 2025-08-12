@@ -37,6 +37,7 @@
   <ItemGroup>
     <Content Include="config.json" />
     <Content Include="requirements.txt" />
+    <Content Include="test_Rules.json" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
