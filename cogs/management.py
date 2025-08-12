@@ -38,7 +38,22 @@ class ManagementCog(commands.Cog):
                 raw_json = raw_json[3:-3]
             
             embed_data = json.loads(raw_json)
-            rules_embed = discord.Embed.from_dict(embed_data)
+
+            # --- ✨ NEW: Multi-Embed Logic ✨ ---
+            list_of_embeds = []
+            # Check if the root of the JSON is a list (for multiple embeds) or a dict (for a single one)
+            if isinstance(embed_data, list):
+                if len(embed_data) > 10:
+                    await interaction.followup.send("Error: Discord only supports up to 10 embeds per message.")
+                    return
+                # Create an embed from each dictionary in the list
+                list_of_embeds = [discord.Embed.from_dict(d) for d in embed_data]
+            elif isinstance(embed_data, dict):
+                # If it's just a single object, put it in a list to handle it the same way
+                list_of_embeds.append(discord.Embed.from_dict(embed_data))
+            else:
+                await interaction.followup.send("Error: The root of the JSON must be an object `{...}` or an array `[...]`.")
+                return
 
         except json.JSONDecodeError:
             await interaction.followup.send("Error: The content of the source message is not valid JSON.")
@@ -47,7 +62,7 @@ class ManagementCog(commands.Cog):
             await interaction.followup.send(f"Error: Could not find the source message (ID: {source_message_id}).")
             return
         except Exception as e:
-            await interaction.followup.send(f"An unexpected error occurred while creating the embed: {e}")
+            await interaction.followup.send(f"An unexpected error occurred while creating the embed(s): {e}")
             return
             
         target_channel = self.bot.get_channel(target_channel_id)
@@ -55,7 +70,6 @@ class ManagementCog(commands.Cog):
             await interaction.followup.send(f"Error: Could not find the target channel (ID: {target_channel_id}).")
             return
             
-        # This variable will hold the message we want to keep
         final_message = None
         
         try:
@@ -66,30 +80,26 @@ class ManagementCog(commands.Cog):
                     break
             
             if bot_message_to_edit:
-                await bot_message_to_edit.edit(embed=rules_embed)
-                final_message = bot_message_to_edit # We edited this one, so we keep it
-                await interaction.followup.send("✅ Rules embed has been successfully updated!")
+                # Use embeds= (plural) to send a list of embeds
+                await bot_message_to_edit.edit(embeds=list_of_embeds)
+                final_message = bot_message_to_edit
+                await interaction.followup.send("✅ Rules embeds have been successfully updated!")
             else:
-                new_message = await target_channel.send(embed=rules_embed)
-                final_message = new_message # We posted this one, so we keep it
-                await interaction.followup.send("✅ Rules embed has been posted for the first time!")
+                # Use embeds= (plural) to send a list of embeds
+                new_message = await target_channel.send(embeds=list_of_embeds)
+                final_message = new_message
+                await interaction.followup.send("✅ Rules embeds have been posted for the first time!")
         except discord.Forbidden:
              await interaction.followup.send("Error: I don't have permission to send or edit messages in the target channel.")
-             return # Stop if we can't perform the main action
+             return
         
-        # --- ✨ NEW: Cleanup Logic ✨ ---
-        # If we successfully posted or edited, clean up any other messages.
         if final_message:
             async for message in target_channel.history(limit=100):
-                # If the message is from the bot AND it's not the one we just updated...
                 if message.author == self.bot.user and message.id != final_message.id:
                     try:
                         await message.delete()
-                    except discord.Forbidden:
-                        print(f"Cleanup failed: Lacked permissions to delete message {message.id}.")
-                        break # Stop trying if permissions fail
-                    except discord.NotFound:
-                        pass # Message was already deleted, ignore
+                    except (discord.Forbidden, discord.NotFound):
+                        pass
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ManagementCog(bot))

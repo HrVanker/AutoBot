@@ -5,7 +5,7 @@
     "fields": [
         {
             "name": "**1: Be Respectful**",
-            "value": "> Treat all members with respect. Harassment, hate speech, or discrimination will not be tolerated.\n> - -# This includes abuse of media/bot permissions, spamming text, noise trolling, etc."
+            "value": " Treat all members with respect. Harassment, hate speech, or discrimination will not be tolerated.\n> - -# This includes abuse of media/bot permissions, spamming text, noise trolling, etc."
         },
         {
             "name": "**2: Discord ToS**",
@@ -17,13 +17,16 @@
         },
         {
             "name": "**4: This server is 18+**",
-            "value": "> Anyone tjought to be under 18 will be removed from the server."
+            "value": "> Anyone thought to be under 18 will be removed from the server."
         },
         {
             "name": "Enforcement:",
             "value": "> Ultimately, we aim to be pretty self-governed. But, server Guides will utilize timeouts and bans to address continued or severe infractions of these guidelines."
         }
     ],
+    "image": {
+        "url": "https://www.reddit.com/media?url=https%3A%2F%2Fpreview.redd.it%2Fn5zy72wzsfhe1.gif"
+    },
     "footer": {
         "text": "We appreciate your cooperation! ☮️"
     }
