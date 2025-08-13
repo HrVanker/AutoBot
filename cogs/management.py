@@ -38,22 +38,27 @@ class ManagementCog(commands.Cog):
                 raw_json = raw_json[3:-3]
             
             embed_data = json.loads(raw_json)
+            
+            # Determine if we have a single embed object or a list of them
+            embed_dicts = embed_data if isinstance(embed_data, list) else [embed_data]
 
-            # --- ✨ NEW: Multi-Embed Logic ✨ ---
-            list_of_embeds = []
-            # Check if the root of the JSON is a list (for multiple embeds) or a dict (for a single one)
-            if isinstance(embed_data, list):
-                if len(embed_data) > 10:
-                    await interaction.followup.send("Error: Discord only supports up to 10 embeds per message.")
-                    return
-                # Create an embed from each dictionary in the list
-                list_of_embeds = [discord.Embed.from_dict(d) for d in embed_data]
-            elif isinstance(embed_data, dict):
-                # If it's just a single object, put it in a list to handle it the same way
-                list_of_embeds.append(discord.Embed.from_dict(embed_data))
-            else:
-                await interaction.followup.send("Error: The root of the JSON must be an object `{...}` or an array `[...]`.")
+            # --- ✨ NEW: Hex Color Conversion Logic ✨ ---
+            for embed_dict in embed_dicts:
+                # Check if the 'color' field exists and is a string
+                if 'color' in embed_dict and isinstance(embed_dict['color'], str):
+                    try:
+                        # Remove '#' and convert from hex (base 16) to an integer
+                        hex_color = embed_dict['color'].lstrip('#')
+                        embed_dict['color'] = int(hex_color, 16)
+                    except ValueError:
+                        # If conversion fails, default to no color
+                        embed_dict.pop('color', None)
+            
+            if len(embed_dicts) > 10:
+                await interaction.followup.send("Error: Discord only supports up to 10 embeds per message.")
                 return
+            
+            list_of_embeds = [discord.Embed.from_dict(d) for d in embed_dicts]
 
         except json.JSONDecodeError:
             await interaction.followup.send("Error: The content of the source message is not valid JSON.")
@@ -80,12 +85,10 @@ class ManagementCog(commands.Cog):
                     break
             
             if bot_message_to_edit:
-                # Use embeds= (plural) to send a list of embeds
-                await bot_message_to_edit.edit(embeds=list_of_embeds)
+                await bot_message_to_edit.edit(content=None, embeds=list_of_embeds)
                 final_message = bot_message_to_edit
                 await interaction.followup.send("✅ Rules embeds have been successfully updated!")
             else:
-                # Use embeds= (plural) to send a list of embeds
                 new_message = await target_channel.send(embeds=list_of_embeds)
                 final_message = new_message
                 await interaction.followup.send("✅ Rules embeds have been posted for the first time!")
