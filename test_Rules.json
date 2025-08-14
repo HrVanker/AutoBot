@@ -1,49 +1,96 @@
 ﻿[
-        {
-            "title": "📜 Server Rules & Guidelines",
-            "description": "Welcome! To maintain a productive environment for debate and mingling, please follow the guidelines listed below.",
-            "color": 5793266,
-            "fields": [
-                {
-                    "name": "**1: Be Respectful**",
-                    "value": " Treat all members with respect. Harassment, hate speech, or discrimination will not be tolerated.\n> - -# This includes abuse of media/bot permissions, spamming text, noise trolling, etc."
-                },
-                {
-                    "name": "**2: Discord ToS**",
-                    "value": "> All activity on this server must comply with Discord's Terms of Service (ToS)."
-                },
-                {
-                    "name": "**3: NSFW Content**",
-                    "value": "> Pornography is prohibited outside of designated, age-restricted channels."
-                },
-                {
-                    "name": "**4: This server is 18+**",
-                    "value": "> Anyone thought to be under 18 will be removed from the server."
-                },
-                {
-                    "name": "Enforcement:",
-                    "value": "> Ultimately, we aim to be pretty self-governed. But, server Guides will utilize timeouts and bans to address continued or severe infractions of these guidelines."
-                }
-            ],
-           
-            "footer": {
-                "text": "We appreciate your cooperation! ☮️"
-            }
-        },
     {
-        "title": "ℹ️ Helpful Tips",
+        "title": "📜 Server Rules & Guidelines",
+        "description": "👋🏼 Welcome! To maintain a productive environment for debate and mingling, please follow the guidelines listed below 👇🏽",
+        "color": "#43B556",
+        "fields": [
+            {
+                "name": "**1: Be Respectful**",
+                "value": "> Treat all members with respect. Harassment, hate speech, or discrimination will not be tolerated.\n> - This includes abuse of media/bot permissions, spamming text, noise trolling, etc."
+            },
+            {
+                "name": "**2: Discord ToS**",
+                "value": "> All activity on this server must comply with Discord's Terms of Service (ToS)."
+            },
+            {
+                "name": "**3: NSFW Content**",
+                "value": "> Pornography is prohibited outside of designated, age-restricted channels."
+            },
+            {
+                "name": "**4: This server is 18+**",
+                "value": "> Anyone thought to be under 18 will be removed from the server."
+            },
+            {
+                "name": "Enforcement:",
+                "value": "> Ultimately, we *aim* to be pretty self-governed. But, server Guides **will** utilize timeouts and bans to address continued or severe infractions of these guidelines."
+            }
+        ],
+        "footer": {
+            "text": "We appreciate your cooperation! ☮️"
+        }
+    },
+    {
+        "title": "🗃️ Roles",
         "description": "",
-        "color": 5793266,
+        "color": "#389C49",
+        "fields": [
+            {
+                "name": "Roles",
+                "value": "<@&1404602773538082986>\n- Automatically assigned when you join the server.\n- You can join VCs, but not create them, restricted media perms.",
+                "inline": true
+            },
+            {
+                "name": "\u200b",
+                "value": "<@&1404604815153303713>\n- Is the next level up\n- You can post links, images, use external emoji, etc.",
+                "inline": true
+            },
+            {
+                "name": "",
+                "value": "-# \u200b",
+                "inline": false
+            },
+            {
+                "name": "\u200b",
+                "value": "<@&1404606604795449364>\n- Self-explanatory",
+                "inline": true
+            },
+            {
+                "name": "\u200b",
+                "value": "<@&1404607997631795271>\n- Some wonderful people who help keep this server running smoothly",
+                "inline": true
+            }
+        ]
+    },
+    {
+        "title": "🗺️ Where to Start:",
+        "description": "",
+        "color": "#389C49",
         "fields": [
             {
                 "name": "<#1404228685334057000>",
-                "value": "Join this room to create your own custom room"
+                "value": "- Join this room to create your own custom room with mods"
             },
             {
-                "name": "Bot Usage",
-                "value": "Anyone with the <#1404613451896062163> role can use AudioBot to play audio into the VC\n\n`/audiobot` for more information"
+                "name": "📺 Room Mod Overview",
+                "value": "- A custom 'Create a Room' gives the creator mod abilities in that room, signified by the ✳️ next to their name\n- The room moderators are able to give mod permissions to other room members, with a maximum of 2 (currently)\n- If a mod leaves a room, they lose mods immediately\n- Room mods are able to mute room members for 15sec at a time, with a 15sec cooldown between mutes\n- If this mute does not suffice, a moderator can initiate a vote to mute and text-suppress a user for 2hrs"
             }
         ]
-
+    },
+    {
+        "title": "🤖 Bots",
+        "description": "",
+        "color": "#389C49",
+        "fields": [
+            {
+                "name":,
+                "value": "<@!1403843060856783043>\n- Anyone with the <@&1404613451896062163> role can use AudioBot to play audio into the VC\n- `/audiobot` for more information",
+                "inline": true
+            },
+            {
+                "name": "\u200b",
+                "value": "<@!1404775842285883412>\n- Use QuoteBot to commemorate those special moments with your pals 😉",
+                "inline": true
+            }
+        ]
     }
 ]
