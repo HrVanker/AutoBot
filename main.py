@@ -27,7 +27,7 @@ class RoleManagerBot(commands.Bot):
         self.guild_id = int(config["guild_id"])
 
     async def setup_hook(self):
-        """This is called when the bot is preparing to start."""
+        """This is called when the AutoBot is preparing to start."""
         # Load all cogs from the 'cogs' directory
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py"):
@@ -44,11 +44,11 @@ class RoleManagerBot(commands.Bot):
         print(" Slash commands synced to guild.")
 
     async def on_ready(self):
-        """Called when the bot is connected and ready."""
+        """Called when AutoBot is connected and ready."""
         print("-" * 30)
         print(f"Logged in as {self.user} (ID: {self.user.id})")
         print(f"Connected to guild: {self.get_guild(self.guild_id).name}")
-        print("RoleManager Bot is online and ready!")
+        print("AutoBot is online and ready!")
         print("-" * 30)
 
 # --- Main Execution ---
