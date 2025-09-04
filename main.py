@@ -8,7 +8,7 @@ from utils import database
 # --- Bot Setup ---
 # Load configuration from config.json
 try:
-    with open("config.json", "r") as f:
+    with open("config.json", "r", encoding="utf-8") as f:
         config = json.load(f)
 except FileNotFoundError:
     print("Error: config.json not found. Please create it.")

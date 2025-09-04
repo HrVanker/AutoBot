@@ -79,7 +79,6 @@ class RolePersistenceCog(commands.Cog):
                 print(f"Failed to restore roles for {member.name} due to missing permissions.")
             except discord.HTTPException as e:
                 print(f"An error occurred while restoring roles for {member.name}: {e}")
-
-
+    
 async def setup(bot: commands.Bot):
     await bot.add_cog(RolePersistenceCog(bot))

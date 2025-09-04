@@ -110,7 +110,23 @@
                 "role_id": "1413006491744604180",
                 "label": "🚪 Jehova's Witness",
                 "style": "primary"
+            },
+            {
+                "role_id": "1413011772977189035",
+                "label": "🏛 Philosopher",
+                "style": "primary"
+            },
+            {
+                "role_id": "1413012305398202448",
+                "label": "👾 Nerd",
+                "style": "primary"
             }
         ]
+    },
+    "database_backup": {
+        "enabled": true,
+        "backup_folder": "./backups",
+        "interval_hours": 12,
+        "copies_to_keep": 2
     }
 }

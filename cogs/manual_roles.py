@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 # We no longer need to import log_action here
 from utils.role_utils import handle_role_add 
+from utils import database
 
 class ManualRolesCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -18,6 +19,29 @@ class ManualRolesCog(commands.Cog):
         if mod_role and mod_role in interaction.user.roles:
             return True
         return False
+
+    @app_commands.command(name="rebuild-roles-db", description="Scans all members and populates the role database.")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def rebuild_roles(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+    
+        guild = interaction.guild
+        member_count = 0
+    
+        # Loop through every member in the server
+        for member in guild.members:
+            if member.bot:
+                continue
+            
+            # Get their current roles
+            current_role_ids = [str(role.id) for role in member.roles if role.name != "@everyone"]
+        
+            # Save them to the database
+            if current_role_ids:
+                database.update_user_roles(member.id, current_role_ids)
+                member_count += 1
+                
+        await interaction.followup.send(f"✅ Successfully scanned and saved roles for {member_count} members.")
 
     @role_group.command(name="add", description="Add a role to a user.")
     @app_commands.describe(user="The user to add the role to.", role="The role to add.")
