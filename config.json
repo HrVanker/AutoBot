@@ -11,9 +11,26 @@
         "message_threshold": 500,
         "promotion_logic": "AND"
     },
+    "role_directory": [
+        {
+            "alias": "Rando",
+            "role_id": "1404602773538082986",
+            "description": "The base role for new members."
+        },
+        {
+            "alias": "Regular",
+            "role_id": "1404604815153303713",
+            "description": "The first promotion, for active members."
+        },
+        {
+            "alias": "OG",
+            "role_id": "1404606604795449364",
+            "description": "The second promotion, for veteran members."
+        }
+    ],
     "toggled_roles": {
-        "1404604815153303713": "1404602773538082986",
-        "1404606604795449364": "1404604815153303713"
+        "Regular": "Rando",
+        "OG": "Regular"
     },
     "rules_embed": {
         "target_channel_id": "1402950211797782640",
