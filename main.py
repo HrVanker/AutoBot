@@ -17,7 +17,7 @@ except FileNotFoundError:
 # Define necessary intents for the bot to function
 intents = discord.Intents.default()
 intents.members = True          # Required for tracking members and roles
-intents.message_content = True  # Required for tracking message counts
+intents.message_content = True  # Required for tracking message 
 intents.voice_states = True     # Required for tracking voice channel activity
 
 class RoleManagerBot(commands.Bot):

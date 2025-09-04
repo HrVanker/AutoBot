@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="cogs\management.py" />
+    <Compile Include="cogs\role_persistance.py" />
     <Compile Include="main.py" />
     <Compile Include="cogs\activity_tracker.py" />
     <Compile Include="cogs\manual_roles.py" />
