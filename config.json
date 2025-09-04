@@ -5,11 +5,24 @@
     "log_channel_id": "1402872850397790218",
     "auto_promotion": {
         "enabled": true,
-        "source_role_id": "1404602773538082986",
-        "target_role_id": "1404604815153303713",
-        "vc_threshold_minutes": 600,
-        "message_threshold": 500,
-        "promotion_logic": "AND"
+        "promotions": [
+            {
+                "name": "Rando to Regular",
+                "source_role_id": "1404602773538082986",
+                "target_role_id": "1404604815153303713",
+                "vc_threshold_minutes": 600,
+                "message_threshold": 500,
+                "promotion_logic": "OR"
+            },
+            {
+                "name": "Regular to OG",
+                "source_role_id": "1404604815153303713",
+                "target_role_id": "1404606604795449364",
+                "vc_threshold_minutes": 2000,
+                "message_threshold": 1500,
+                "promotion_logic": "AND"
+            }
+        ]
     },
     "role_directory": [
         {
@@ -63,7 +76,7 @@
             },
             {
                 "role_id": "1413003618700886249",
-                "label": "🐉 J.P. Christian",
+                "label": "🐉 Cultural Christian",
                 "style": "primary"
             },
             {
