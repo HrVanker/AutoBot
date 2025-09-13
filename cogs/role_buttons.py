@@ -12,7 +12,7 @@ class RoleButtonView(discord.ui.View):
         for config in role_configs:
             role_id = int(config["role_id"])
             label = config["label"]
-            style = config.get("style", "green")
+            style = config.get("style", "secondary")
             
             # Map style string to discord.ButtonStyle enum
             style_map = {
@@ -20,12 +20,17 @@ class RoleButtonView(discord.ui.View):
                 "secondary": discord.ButtonStyle.secondary,
                 "green": discord.ButtonStyle.green,
                 "danger": discord.ButtonStyle.danger,
+                "blurple": discord.ButtonStyle.blurple,
+                "gray": discord.ButtonStyle.gray,
+                "grey": discord.ButtonStyle.grey,
+                "red": discord.ButtonStyle.red,
+                "premium": discord.ButtonStyle.premium
             }
             
             button = discord.ui.Button(
                 label=label,
                 custom_id=f"role_button_{role_id}", # A unique ID for each button
-                style=style_map.get(style.lower(), discord.ButtonStyle.green)
+                style=style_map.get(style.lower(), discord.ButtonStyle.secondary)
             )
             
             # Set the button's callback to our generic handler
@@ -91,7 +96,7 @@ class RoleButtonCog(commands.Cog):
         embed = discord.Embed(
             title=config.get("message_title", "Role Selection"),
             description=config.get("message_description", "Click the buttons to get your roles."),
-            color=discord.Color.blue()
+            color=discord.Color.green()
         )
         view = RoleButtonView(role_configs)
         

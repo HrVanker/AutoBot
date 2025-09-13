@@ -57,82 +57,82 @@
             {
                 "role_id": "1413002464864632944",
                 "label": "✝ Christian",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413002675435601970",
                 "label": "☪ Muslim",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413002923230625843",
                 "label": "☦ Orthodox",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413003019418603651",
                 "label": "⚪ Catholic",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413003618700886249",
                 "label": "🐉 Cultural Christian",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413004140917031033",
                 "label": "🎩 Mormon",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413004372723503176",
                 "label": "🍳 Pan-whatever-ist",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413004524637126696",
                 "label": "⚛ Atheist",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413005097134198855",
                 "label": "☁ Agnostic",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413005239182692352",
                 "label": "🐯 Calvinist",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413005336951918742",
                 "label": "🧬 Evolution",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413005639248121946",
                 "label": "🌌 Universalist",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413005702317736056",
                 "label": "🦗 YEC",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413006491744604180",
                 "label": "🚪 Jehova's Witness",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413011772977189035",
                 "label": "🏛 Philosopher",
-                "style": "primary"
+                "style": "green"
             },
             {
                 "role_id": "1413012305398202448",
                 "label": "👾 Nerd",
-                "style": "primary"
+                "style": "green"
             }
         ]
     },
