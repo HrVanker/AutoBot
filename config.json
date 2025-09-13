@@ -20,7 +20,7 @@
                 "target_role_id": "1404606604795449364",
                 "vc_threshold_minutes": 2000,
                 "message_threshold": 1500,
-                "promotion_logic": "AND"
+                "promotion_logic": "OR"
             }
         ]
     },

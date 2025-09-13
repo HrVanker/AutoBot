@@ -12,7 +12,7 @@ class RoleButtonView(discord.ui.View):
         for config in role_configs:
             role_id = int(config["role_id"])
             label = config["label"]
-            style = config.get("style", "secondary")
+            style = config.get("style", "green")
             
             # Map style string to discord.ButtonStyle enum
             style_map = {
@@ -25,7 +25,7 @@ class RoleButtonView(discord.ui.View):
             button = discord.ui.Button(
                 label=label,
                 custom_id=f"role_button_{role_id}", # A unique ID for each button
-                style=style_map.get(style.lower(), discord.ButtonStyle.secondary)
+                style=style_map.get(style.lower(), discord.ButtonStyle.green)
             )
             
             # Set the button's callback to our generic handler
