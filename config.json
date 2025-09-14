@@ -85,6 +85,11 @@
                 "style": "green"
             },
             {
+                "role_id": "1416516675506933955",
+                "label": "🔄 Presup",
+                "style": "green"
+            },
+            {
                 "role_id": "1413004372723503176",
                 "label": "🍳 Pan-whatever-ist",
                 "style": "green"
@@ -107,6 +112,21 @@
             {
                 "role_id": "1413005336951918742",
                 "label": "🧬 Evolution",
+                "style": "green"
+            },
+            {
+                "role_id": "1416680265824211146",
+                "label": "🐇 Vegan",
+                "style": "green"
+            },
+            {
+                "role_id": "1416682308072898580",
+                "label": "☯ Taoist",
+                "style": "green"
+            },
+            {
+                "role_id": "1416683234317701181",
+                "label": "🧘 Zen",
                 "style": "green"
             },
             {
