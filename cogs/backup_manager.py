@@ -1,10 +1,13 @@
-﻿import discord
+﻿from colorama import Fore, Style
+import colorama
+import discord
 from discord.ext import commands, tasks
 from discord import app_commands
 import os
 import shutil
 from datetime import datetime
 from utils.database import DB_FILE # Import your DB_FILE variable
+colorama.init(autoreset=True)
 
 class BackupManagerCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -36,7 +39,7 @@ class BackupManagerCog(commands.Cog):
 
         try:
             shutil.copyfile(DB_FILE, backup_path)
-            print(f"Database backup successful: {backup_path}")
+            print(Fore.CYAN + f"Database backup successful: {backup_path}")
 
             # --- Rotation Logic ---
             # Get all backup files, sorted by creation time (oldest first)
@@ -49,17 +52,17 @@ class BackupManagerCog(commands.Cog):
             while len(backups) > copies_to_keep:
                 file_to_delete = backups.pop(0)
                 os.remove(file_to_delete)
-                print(f"Removed old backup: {file_to_delete}")
+                print(Fore.CYAN + f"Removed old backup: {file_to_delete}")
             
             return True, f"Backup created: `{backup_file_name}`"
         except Exception as e:
-            print(f"Database backup failed: {e}")
+            print(Style.BRIGHT + Fore.YELLOW + f"Database backup failed: {e}")
             return False, str(e)
 
     @tasks.loop(hours=12)
     async def backup_task(self):
         """The scheduled task that runs automatically."""
-        print("Running scheduled database backup...")
+        print(Style.DIM + Fore.YELLOW + f"Running scheduled database backup...")
         self.perform_backup()
 
     @app_commands.command(name="backup-db", description="Manually triggers a database backup.")

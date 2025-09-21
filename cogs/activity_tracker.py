@@ -4,6 +4,9 @@ from datetime import datetime
 from utils import database
 # We no longer need to import log_action here
 from utils.role_utils import handle_role_add
+import colorama
+from colorama import Fore, Style, init
+colorama.init(autoreset=True)
 
 class ActivityTrackerCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -97,7 +100,7 @@ class ActivityTrackerCog(commands.Cog):
         if not source_role_id: return
         role = member.guild.get_role(source_role_id)
         if not role:
-            print(f"Error: Auto-assign role with ID {source_role_id} not found.")
+            print(Style.Bright + Fore.RED + f"Error: Auto-assign role with ID {source_role_id} not found.")
             return
         
         # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼

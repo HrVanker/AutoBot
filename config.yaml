@@ -1,0 +1,187 @@
+﻿bot_token: "MTQwMzQ1NDQ2NTI2ODI1MjcyMw.GlFCtE.SGJncEw4YmMJqZgU8yvYzQfhhUssQHxJ-RFrKs"
+guild_id: "1402464831935877240"
+mod_role_id: "1404607997631795271"
+log_channel_id: "1402872850397790218"
+
+auto_promotion:
+  enabled: true
+  promotions:
+    - name: "Rando to Regular"
+      source_role_id: "1404602773538082986"
+      target_role_id: "1404604815153303713"
+      vc_threshold_minutes: 600
+      message_threshold: 500
+      promotion_logic: "OR"
+    - name: "Regular to OG"
+      source_role_id: "1404604815153303713"
+      target_role_id: "1404606604795449364"
+      vc_threshold_minutes: 2000
+      message_threshold: 1500
+      promotion_logic: "OR"
+
+database_backup:
+  enabled: true
+  backup_folder: "./backups"
+  interval_hours: 12
+  copies_to_keep: 2
+
+role_directory:
+  - alias: "Rando"
+    role_id: "1404602773538082986"
+    description: "The base role for new members"
+  - alias: "Regular"
+    role_id: "1404604815153303713"
+    description: "The first promotion, for active members"
+  - alias: "OG"
+    role_id: "1404606604795449364"
+    description: "The second promotion, for veteran members."
+
+toggled_roles:
+  "Regular": "Rando"
+  "OG": "Regular"
+
+rules_embed:
+  target_channel_id: "1402950211797782640"
+  source_channel_id: "1404736924924645417"
+
+self_assign_roles:
+  channel_id: "1413001885748826234"
+  message_title: "👅🔥 Flavor Roles 🔥👅"
+  message_description: "Click the buttons below to tell us a bit about yourself"
+  roles:
+    - role_id: "1413005097134198855"
+      label: "☁ Agnostic"
+      style: "green"
+    - role_id: "1413004524637126696"
+      label: "⚛ Atheist"
+      style: "green"
+    - role_id: "1413005239182692352"
+      label: "🐯 Calvinist"
+      style: "green"
+    - role_id: "1413003019418603651"
+      label: "⚪ Catholic"
+      style: "green"
+    - role_id: "1413002464864632944"
+      label: "✝ Christian"
+      style: "green"
+    - role_id: "1416694300317843516"
+      label: "🕵 Conspiracy Theory"
+      style: "green"
+    - role_id: "1413003618700886249"
+      label: "🐉 Cultural Christian"
+      style: "green"
+    - role_id: "1413005336951918742"
+      label: "🧬 Evolution"
+      style: "green"
+    - role_id: "1416698068556054608"
+      label: "🥿 Flat Earth"
+      style: "green"
+    - role_id: "1416693984922832906"
+      label: "🙌 Healing"
+      style: "green"
+    - role_id: "1413006491744604180"
+      label: "🚪 Jehova's Witness"
+      style: "green"
+    - role_id: "1416697477201133678"
+      label: "✡ Jewish"
+      style: "green"
+    - role_id: "1413004140917031033"
+      label: "🎩 Mormon"
+      style: "green"
+    - role_id: "1413002675435601970"
+      label: "☪ Muslim"
+      style: "green"
+    - role_id: "1413012305398202448"
+      label: "👾 Nerd"
+      style: "green"
+    - role_id: "1413002923230625843"
+      label: "☦ Orthodox"
+      style: "green"
+    - role_id: "1413004372723503176"
+      label: "🍳 Pan-whatever-ist"
+      style: "green"
+    - role_id: "1413011772977189035"
+      label: "🏛 Philoso-Nerd"
+      style: "green"
+    - role_id: "1416516675506933955"
+      label: "🔄 Presup"
+      style: "green"
+    - role_id: "1417270552590290984"
+      label: "🧾 Reformed"
+      style: "green"
+    - role_id: "1416682308072898580"
+      label: "☯ Taoist"
+      style: "green"
+    - role_id: "1413005639248121946"
+      label: "🌌 Universalist"
+      style: "green"
+    - role_id: "1416680265824211146"
+      label: "🐇 Vegan"
+      style: "green"
+    - role_id: "1413005702317736056"
+      label: "🦗 YEC"
+      style: "green"
+    - role_id: "1416683234317701181"
+      label: "🧘 Zen"
+      style: "green"
+
+known_users:
+    known_trolls:
+      - id: 894789076153172050 #Toast
+      - id: 1218690621951443074 #Toast
+      - id: 1378559190943006740 #Toast
+      - id: 439539484023980033 #Shamos
+    known_ogs:
+      - id: 176422995139624961 #Chum
+      - id: 195757722778468352 #IX
+      - id: 1017824720776872066 #Rags2Riches
+      - id: 1149424329206026320 #Walter
+      - id: 530977548897615874 #Gavin
+      - id: 285238447994568705 #Floyd
+      - id: 208715747529064448 #Tom
+      - id: 1061056923438415964 #Soltex
+      - id: 1040466600752586763 #SecularOpinion
+      - id: 166623872504954880 #Pmars
+      - id: 236871504766304257 #Mulder
+      - id: 1171916128717656084 #MinnesotaJoe
+      - id: 1218005998942556221 #Meeko
+      - id: 1347764896158322749 #James
+      - id: 1156611167842746468 #Kyrie, Sharmat, etc.
+      - id: 1196940904985002121 #Klein
+      - id: 954106798229557358 #Jane
+      - id: 849452589039878165 #Haydi
+      - id: 1120861979716894752 #Bart
+      - id: 910261439137202217 #JohnLee
+      - id: 1258380370601181265 #JohnLeeAlt
+      - id: 475628193194442752 #MarzBarz
+      - id: 93547005690773504 #Dyehead
+      - id: 278969957981880320 #Sonceed
+      - id: 371647053723336706 #Chupa
+      - id: 244366762043375626 #Alex
+      - id: 1205278046383382619 #AndrewRALT
+      - id: 740021279137988660 #Rab
+      - id: 873129829875212318 #AndrewR
+      - id: 174647870475993088 #Jovonn
+      - id: 908559689980194886 #SkinnyPete
+      - id: 1031424614225678456 #Moe
+      - id: 1043770932281479198 #Shae
+      - id: 770385580466765885 #Sasha
+      - id: 291918974453678080 #Ray
+      - id: 398620711658323968 #Sugar
+      - id: 829891790211383296 #Bill
+      - id: 862775074222243840 #Daily
+      - id: 1112013183331356773 #JJ
+      - id: 465654078274404372 #Deepak
+      - id: 1280850383505330261 #Ray
+      - id: 114859744048578560 #Danny
+      - id: 292797656344821762 #Detroyer
+      - id: 776196083369639966 #Turok
+      - id: 849452589039878165 #Haydi
+      - id: 863183798576742420 #chad
+      - id: 420975898741833759 #JD
+      - id: 293555257722667008 #DGH
+      - id: 1029168679360929892 #AP
+      - id: 1297411262077997107 #Bernie
+      - id: 734119920555786323 #NinjaBemLite
+      - id: 421058542582366208 #Scott Preston
+      - id: 186977708390088705 #Hiwa

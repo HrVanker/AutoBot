@@ -1,6 +1,7 @@
 ﻿import discord
 from discord.ext import commands
-import json
+#import json
+import yaml
 import asyncio
 
 class ManagementCog(commands.Cog):
@@ -10,7 +11,7 @@ class ManagementCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         """
-        This listener watches for a 'rules.json' file upload in the source channel
+        This listener watches for a 'rules.yaml' file upload in the source channel
         and automatically updates the rules embed.
         """
         # Ignore messages from bots (including ourself)
@@ -25,10 +26,10 @@ class ManagementCog(commands.Cog):
         if not message.channel.id == source_channel_id:
             return
 
-        # Check if the message has an attachment named 'rules.json'
+        # Check if the message has an attachment named 'rules.yaml'
         rules_attachment = None
         for attachment in message.attachments:
-            if attachment.filename == "rules.json":
+            if attachment.filename == "rules.yaml":
                 rules_attachment = attachment
                 break
         
@@ -40,10 +41,11 @@ class ManagementCog(commands.Cog):
         await message.add_reaction("⚙️")
 
         try:
-            # Read the file content and parse the JSON
-            json_bytes = await rules_attachment.read()
-            json_string = json_bytes.decode('utf-8')
-            embed_data = json.loads(json_string)
+            # Read the file content and parse the YAML
+            yaml_bytes = await rules_attachment.read()
+            yaml_string = yaml_bytes.decode('utf-8')
+            embed_data = yaml.safe_load(yaml_string) 
+            #yaml.safe_loads(yaml_string)
             
             embed_dicts = embed_data if isinstance(embed_data, list) else [embed_data]
 
@@ -65,7 +67,7 @@ class ManagementCog(commands.Cog):
 
         except Exception as e:
             # Report any error during file reading or parsing
-            status = await message.channel.send(f"❌ Error processing `rules.json`: {e}")
+            status = await message.channel.send(f"❌ Error processing `rules.yaml`: {e}")
             await asyncio.sleep(10)
             await status.delete()
             await message.remove_reaction("⚙️", self.bot.user)

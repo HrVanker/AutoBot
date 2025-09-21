@@ -38,7 +38,8 @@
     <Folder Include="utils\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.json" />
+    <Content Include="cogs\rules.yaml" />
+    <Content Include="config.yaml" />
     <Content Include="requirements.txt" />
     <Content Include="test_Rules.json" />
   </ItemGroup>

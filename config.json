@@ -24,6 +24,12 @@
             }
         ]
     },
+    "database_backup": {
+        "enabled": true,
+        "backup_folder": "./backups",
+        "interval_hours": 12,
+        "copies_to_keep": 2
+    },
     "role_directory": [
         {
             "alias": "Rando",
@@ -51,47 +57,12 @@
     },
     "self_assign_roles": {
         "channel_id": "1413001885748826234",
-        "message_title": "🍥 Choose Your Roles 🍥",
+        "message_title": "📇 Choose Your Roles 📇",
         "message_description": "Click the buttons below to help tell us a bit about yourself",
         "roles": [
             {
-                "role_id": "1413002464864632944",
-                "label": "✝ Christian",
-                "style": "green"
-            },
-            {
-                "role_id": "1413002675435601970",
-                "label": "☪ Muslim",
-                "style": "green"
-            },
-            {
-                "role_id": "1413002923230625843",
-                "label": "☦ Orthodox",
-                "style": "green"
-            },
-            {
-                "role_id": "1413003019418603651",
-                "label": "⚪ Catholic",
-                "style": "green"
-            },
-            {
-                "role_id": "1413003618700886249",
-                "label": "🐉 Cultural Christian",
-                "style": "green"
-            },
-            {
-                "role_id": "1413004140917031033",
-                "label": "🎩 Mormon",
-                "style": "green"
-            },
-            {
-                "role_id": "1416516675506933955",
-                "label": "🔄 Presup",
-                "style": "green"
-            },
-            {
-                "role_id": "1413004372723503176",
-                "label": "🍳 Pan-whatever-ist",
+                "role_id": "1413005097134198855",
+                "label": "☁ Agnostic",
                 "style": "green"
             },
             {
@@ -100,13 +71,28 @@
                 "style": "green"
             },
             {
-                "role_id": "1413005097134198855",
-                "label": "☁ Agnostic",
+                "role_id": "1413005239182692352",
+                "label": "🐯 Calvinist",
                 "style": "green"
             },
             {
-                "role_id": "1413005239182692352",
-                "label": "🐯 Calvinist",
+                "role_id": "1413003019418603651",
+                "label": "⚪ Catholic",
+                "style": "green"
+            },
+            {
+                "role_id": "1413002464864632944",
+                "label": "✝ Christian",
+                "style": "green"
+            },
+            {
+                "role_id": "1416694300317843516",
+                "label": "🕵 Conspiracy Theory",
+                "style": "green"
+            },
+            {
+                "role_id": "1413003618700886249",
+                "label": "🐉 Cultural Christian",
                 "style": "green"
             },
             {
@@ -115,28 +101,8 @@
                 "style": "green"
             },
             {
-                "role_id": "1416680265824211146",
-                "label": "🐇 Vegan",
-                "style": "green"
-            },
-            {
-                "role_id": "1416682308072898580",
-                "label": "☯ Taoist",
-                "style": "green"
-            },
-            {
-                "role_id": "1416683234317701181",
-                "label": "🧘 Zen",
-                "style": "green"
-            },
-            {
-                "role_id": "1413005639248121946",
-                "label": "🌌 Universalist",
-                "style": "green"
-            },
-            {
-                "role_id": "1413005702317736056",
-                "label": "🦗 YEC",
+                "role_id": "1416693984922832906",
+                "label": "🙌 Healing",
                 "style": "green"
             },
             {
@@ -145,21 +111,71 @@
                 "style": "green"
             },
             {
-                "role_id": "1413011772977189035",
-                "label": "🏛 Philosopher",
+                "role_id": "1416697477201133678",
+                "label": "✡ Jewish",
+                "style": "green"
+            },
+            {
+                "role_id": "1413004140917031033",
+                "label": "🎩 Mormon",
+                "style": "green"
+            },
+            {
+                "role_id": "1413002675435601970",
+                "label": "☪ Muslim",
                 "style": "green"
             },
             {
                 "role_id": "1413012305398202448",
                 "label": "👾 Nerd",
                 "style": "green"
+            },
+            {
+                "role_id": "1413002923230625843",
+                "label": "☦ Orthodox",
+                "style": "green"
+            },
+            {
+                "role_id": "1413004372723503176",
+                "label": "🍳 Pan-whatever-ist",
+                "style": "green"
+            },
+            {
+                "role_id": "1413011772977189035",
+                "label": "🏛 Philosopher",
+                "style": "green"
+            },
+            {
+                "role_id": "1416516675506933955",
+                "label": "🔄 Presup",
+                "style": "green"
+            },
+            {
+                "role_id": "1416682308072898580",
+                "label": "☯ Taoist",
+                "style": "green"
+            },
+            {
+                "role_id": "1413005639248121946",
+                "label": "🌌 Universalist",
+                "style": "green"
+            },
+            {
+                "role_id": "1416680265824211146",
+                "label": "🐇 Vegan",
+                "style": "green"
+            },
+            {
+                "role_id": "1413005702317736056",
+                "label": "🦗 YEC",
+                "style": "green"
+            },
+            {
+                "role_id": "1416683234317701181",
+                "label": "🧘 Zen",
+                "style": "green"
             }
+
         ]
-    },
-    "database_backup": {
-        "enabled": true,
-        "backup_folder": "./backups",
-        "interval_hours": 12,
-        "copies_to_keep": 2
     }
 }
