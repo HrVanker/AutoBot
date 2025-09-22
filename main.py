@@ -52,11 +52,11 @@ class RoleManagerBot(commands.Bot):
                 discord.Activity(type=discord.ActivityType.listening, name="subliminal messages 🔺"),
                 discord.Activity(type=discord.ActivityType.playing, name="Scrabble"),
                 discord.Activity(type=discord.ActivityType.listening, name="Barbara Streisand"),
-                discord.Activity(type=discord.CustomActivity(name="Drink Coca-Cola!", emoji="😊")),
-                discord.Activity(type=discord.CustomActivity(name="CONSUME!", emoji="🛒")),
-                discord.Activity(type=discord.CustomActivity(name="OBEY!", emoji="🙇🏼‍♂️")),
-                discord.Activity(type=discord.CustomActivity(name="REPRODUCE!", emoji="💝")),
-                discord.Activity(type=discord.CustomActivity(name="CONFORM!", emoji="🖇"))]
+                type=discord.CustomActivity(name="Drink Coca-Cola!", emoji="😊"),
+                type=discord.CustomActivity(name="CONSUME!", emoji="🛒"),
+                type=discord.CustomActivity(name="OBEY!", emoji="🙇🏼‍♂️"),
+                type=discord.CustomActivity(name="REPRODUCE!", emoji="💝"),
+                type=discord.CustomActivity(name="CONFORM!", emoji="🖇")]
         else:
             # The "statii" list, for normal rotation
             status_pool = [
