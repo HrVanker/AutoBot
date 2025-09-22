@@ -19,7 +19,12 @@ services:
     dns:
       - 8.8.8.8
     volumes:
-      # Maps the named volume "autobot-data" to the "/app/data" folder inside the container.
-      # Any file the bot writes to /app/data will actually be saved in the volume.
-      - autobot-data:/app/data
-  
+      # Mounts the 'autobot-db' volume to the project's root folder inside the container.
+      - autobot-db:/app
+      # Mounts the 'autobot-backups' volume to the backup folder inside the container.
+      - autobot-backups:/app/backup
+
+# Declare both named volumes here.
+volumes:
+  autobot-db:
+  autobot-backups:    
