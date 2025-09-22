@@ -16,3 +16,5 @@ services:
     #token
     env_file:
       - .env
+    dns:
+      - 8.8.8.8
