@@ -45,18 +45,17 @@ class RoleManagerBot(commands.Bot):
 
         if jackpot:
             # The "statti" list, for jackpots
-            status_pool = [
-                discord.Activity(type=discord.ActivityType.playing, name="coy 😏"),
+            status_pool = [discord.Activity(type=discord.ActivityType.playing, name="coy 😏"),
                 discord.Activity(type=discord.ActivityType.watching, name=f"{random_member.display_name}"),
                 discord.Activity(type=discord.ActivityType.listening, name=f"{random_member.display_name}'s private calls"),
                 discord.Activity(type=discord.ActivityType.listening, name="subliminal messages 🔺"),
                 discord.Activity(type=discord.ActivityType.playing, name="Scrabble"),
                 discord.Activity(type=discord.ActivityType.listening, name="Barbara Streisand"),
-                type=discord.CustomActivity(name="Drink Coca-Cola!", emoji="😊"),
-                type=discord.CustomActivity(name="CONSUME!", emoji="🛒"),
-                type=discord.CustomActivity(name="OBEY!", emoji="🙇🏼‍♂️"),
-                type=discord.CustomActivity(name="REPRODUCE!", emoji="💝"),
-                type=discord.CustomActivity(name="CONFORM!", emoji="🖇")]
+                discord.CustomActivity(name="Drink Coca-Cola!", emoji="😊"),
+                discord.CustomActivity(name="CONSUME!", emoji="🛒"),
+                discord.CustomActivity(name="OBEY!", emoji="🙇🏼‍♂️"),
+                discord.CustomActivity(name="REPRODUCE!", emoji="💝"),
+                discord.CustomActivity(name="CONFORM!", emoji="🖇")]
         else:
             # The "statii" list, for normal rotation
             status_pool = [
