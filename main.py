@@ -116,14 +116,16 @@ class RoleManagerBot(commands.Bot):
         rnd_int2 = random.randint(1, 100)
         rnd_int1 = random.randint(1, 100)
         is_jackpot = rnd_int1 == rnd_int2
-        print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
+        
         
         if is_jackpot:
+            print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
             new_status = self._generate_status(jackpot=True)
             next_wait_time = random.randint(3, 5) # Short wait time for next change
             print(f"Displaying special status: {new_status} for {next_wait_time}")
 
         else:
+            print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
             new_status = self._generate_status(jackpot=False)
             next_wait_time = random.randint(1800, 5400) # 30-90 min wait time
 
