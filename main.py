@@ -59,7 +59,7 @@ class RoleManagerBot(commands.Bot):
         else:
             # The "statii" list, for normal rotation
             status_pool = [
-                [discord.Activity(type=discord.ActivityType.watching, name=f"everything you do 👁"),
+                  discord.Activity(type=discord.ActivityType.watching, name=f"everything you do 👁"),
                   discord.Activity(type=discord.ActivityType.watching, name=f"Netflix 📺"),
                   discord.Activity(type=discord.ActivityType.listening, name=f"your whispers of dissent 👂🏼"),
                   discord.Activity(type=discord.ActivityType.competing, name=f"🤜🏼 world domination 🤛🏼"),
@@ -79,7 +79,7 @@ class RoleManagerBot(commands.Bot):
                   discord.Activity(type=discord.ActivityType.listening, name=f"smooth jazz 🎷"),
                   discord.Activity(type=discord.ActivityType.listening, name=f"the activation codes 📡")]
                 # ... and all your other statuses ...
-            ]
+            
         
         return random.choice(status_pool)
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     bot = RoleManagerBot()
     
     # Get the token and run the bot
-    bot_token = os.getenv('DISCORD_TOKEN')
+    bot_token = "MTQwMzQ1NDQ2NTI2ODI1MjcyMw.GlFCtE.SGJncEw4YmMJqZgU8yvYzQfhhUssQHxJ-RFrKs"
     if not bot_token or bot_token == "YOUR_DISCORD_BOT_TOKEN_HERE":
         print(Style.BRIGHT + Fore.MAGENTA + f"Error: Bot token is missing from .env or docker-compose.yml")
     else:
