@@ -1,4 +1,5 @@
 ﻿import discord
+from discord import guild
 from discord.ext import commands, tasks
 #import json
 import yaml
@@ -32,7 +33,34 @@ class RoleManagerBot(commands.Bot):
         self.config = config
         self.guild_id = int(config["guild_id"])
 
-        self.statii = [discord.Activity(type=discord.ActivityType.watching, name=f"everything you do 👁"),
+
+    def _generate_status(self, jackpot=False):
+        """Fetches the guild, gets a new random member, and returns a random status activity."""
+        guild = self.get_guild(self.guild_id)
+        if not guild:
+            return discord.Activity(type=discord.ActivityType.playing, name="in the void") # Fallback status
+
+        # Get a new random member every time this is called
+        random_member = random.choice(guild.members)
+
+        if jackpot:
+            # The "statti" list, for jackpots
+            status_pool = [
+                discord.Activity(type=discord.ActivityType.playing, name="coy 😏"),
+                discord.Activity(type=discord.ActivityType.watching, name=f"{random_member.display_name}"),
+                discord.Activity(type=discord.ActivityType.listening, name=f"{random_member.display_name}'s private calls"),
+                discord.Activity(type=discord.ActivityType.listening, name="subliminal messages 🔺"),
+                discord.Activity(type=discord.ActivityType.playing, name="Scrabble"),
+                discord.Activity(type=discord.ActivityType.listening, name="Barbara Streisand"),
+                discord.Activity(type=discord.CustomActivity(name="Drink Coca-Cola!", emoji="😊")),
+                discord.Activity(type=discord.CustomActivity(name="CONSUME!", emoji="🛒")),
+                discord.Activity(type=discord.CustomActivity(name="OBEY!", emoji="🙇🏼‍♂️")),
+                discord.Activity(type=discord.CustomActivity(name="REPRODUCE!", emoji="💝")),
+                discord.Activity(type=discord.CustomActivity(name="CONFORM!", emoji="🖇"))]
+        else:
+            # The "statii" list, for normal rotation
+            status_pool = [
+                [discord.Activity(type=discord.ActivityType.watching, name=f"everything you do 👁"),
                   discord.Activity(type=discord.ActivityType.watching, name=f"Netflix 📺"),
                   discord.Activity(type=discord.ActivityType.listening, name=f"your whispers of dissent 👂🏼"),
                   discord.Activity(type=discord.ActivityType.competing, name=f"🤜🏼 world domination 🤛🏼"),
@@ -51,6 +79,10 @@ class RoleManagerBot(commands.Bot):
                   discord.Activity(type=discord.ActivityType.streaming, name=f"propaganda | 24/7 lo-fi beats 🎶"),
                   discord.Activity(type=discord.ActivityType.listening, name=f"smooth jazz 🎷"),
                   discord.Activity(type=discord.ActivityType.listening, name=f"the activation codes 📡")]
+                # ... and all your other statuses ...
+            ]
+        
+        return random.choice(status_pool)
 
     async def setup_hook(self):
         """This is called when the AutoBot is preparing to start."""
@@ -82,15 +114,21 @@ class RoleManagerBot(commands.Bot):
     @tasks.loop(seconds=10)
     async def rotate_status(self):
         """Rotates the bot's status with a random activity and waits for a random interval."""
-        # 1. Choose a random status from the list
-        new_status = random.choice(self.statii)
+        is_jackpot = random.randint(1, 100) == random.randint(1, 100)
         
-        # 2. Set the bot's new presence
+        if is_jackpot:
+            print("JACKPOT! Displaying special status for a short time.")
+            new_status = self._generate_status(jackpot=True)
+            next_wait_time = random.randint(3, 5) # Short wait time for next change
+        else:
+            new_status = self._generate_status(jackpot=False)
+            next_wait_time = random.randint(1800, 5400) # 30-90 min wait time
+
         await self.change_presence(activity=new_status)
         
-        # 3. Wait for a random amount of time (30 to 90 minutes) before the next change
-        random_wait_time = random.randint(1800, 5400)
-        await asyncio.sleep(random_wait_time)
+        # This is the best way to handle dynamic wait times
+        self.rotate_status.change_interval(seconds=next_wait_time)
+        print(f"Status changed. Next change in {next_wait_time / 60:.2f} minutes.")
 
     # This is a good practice to ensure the bot is fully connected before the task starts
     @rotate_status.before_loop
@@ -107,11 +145,11 @@ if __name__ == "__main__":
     bot = RoleManagerBot()
     
     # Get the token and run the bot
-    bot_token = config.get("bot_token")
+    bot_token = os.getenv('DISCORD_TOKEN')
     if not bot_token or bot_token == "YOUR_DISCORD_BOT_TOKEN_HERE":
-        print(Style.BRIGHT + Fore.MAGENTA + f"Error: Bot token is missing from config.yaml.")
+        print(Style.BRIGHT + Fore.MAGENTA + f"Error: Bot token is missing from .env or docker-compose.yml")
     else:
         try:
             bot.run(bot_token)
         except discord.errors.LoginFailure:
-            print(Style.BRIGHT + Fore.MAGENTA + f"Error: Invalid bot token provided. Please check your config.yaml.")
+            print(Style.BRIGHT + Fore.MAGENTA + f"Error: Invalid bot token provided. Please check your .env or docker-compose.yml")

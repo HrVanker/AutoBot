@@ -38,8 +38,10 @@
     <Folder Include="utils\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="cogs\rules.yaml" />
     <Content Include="config.yaml" />
+    <Content Include="docker-compose.yml" />
     <Content Include="requirements.txt" />
     <Content Include="test_Rules.json" />
   </ItemGroup>
