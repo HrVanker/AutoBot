@@ -113,7 +113,10 @@ class RoleManagerBot(commands.Bot):
     @tasks.loop(seconds=10)
     async def rotate_status(self):
         """Rotates the bot's status with a random activity and waits for a random interval."""
-        is_jackpot = random.randint(1, 100) == random.randint(1, 100)
+        rnd_int2 = random.randint(1, 100)
+        rnd_int1 = random.randint(1, 100)
+        is_jackpot = rnd_int1 == rnd_int2
+        print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
         
         if is_jackpot:
             new_status = self._generate_status(jackpot=True)
