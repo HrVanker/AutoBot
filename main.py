@@ -144,7 +144,7 @@ if __name__ == "__main__":
     bot = RoleManagerBot()
     
     # Get the token and run the bot
-    bot_token = "MTQwMzQ1NDQ2NTI2ODI1MjcyMw.GlFCtE.SGJncEw4YmMJqZgU8yvYzQfhhUssQHxJ-RFrKs"
+    bot_token = os.getenv('DISCORD_TOKEN')
     if not bot_token or bot_token == "YOUR_DISCORD_BOT_TOKEN_HERE":
         print(Style.BRIGHT + Fore.MAGENTA + f"Error: Bot token is missing from .env or docker-compose.yml")
     else:
