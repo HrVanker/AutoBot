@@ -18,3 +18,8 @@ services:
       - .env
     dns:
       - 8.8.8.8
+    volumes:
+      # Maps the named volume "autobot-data" to the "/app/data" folder inside the container.
+      # Any file the bot writes to /app/data will actually be saved in the volume.
+      - autobot-data:/app/data
+  
