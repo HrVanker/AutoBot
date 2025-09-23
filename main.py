@@ -131,7 +131,7 @@ class RoleManagerBot(commands.Bot):
         
         # This is the best way to handle dynamic wait times
         self.rotate_status.change_interval(seconds=next_wait_time)
-        print(f"Status changed. Next change in {next_wait_time / 60:.2f} minutes.\n    Random int1: {rnd_int1} Random int2: {rnd_int2}")
+        print(f"Status changed. Next change in {next_wait_time / 60:.2f} minutes.\nRandom int1: {rnd_int1} Random int2: {rnd_int2}")
 
     # This is a good practice to ensure the bot is fully connected before the task starts
     @rotate_status.before_loop
