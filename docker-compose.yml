@@ -20,10 +20,11 @@ services:
       - 8.8.8.8
     volumes:
       # Mounts the 'autobot-db' volume to the project's root folder inside the container.
-      - ./data/user_activity.db:/app/user_activity.db
+      - autobot-db:/app/data
       # Mounts the 'autobot-backups' volume to the backup folder inside the container.
       - autobot-backups:/app/backups
 
 # Declare both named volumes here.
 volumes:
+  autobot-db:
   autobot-backups:    

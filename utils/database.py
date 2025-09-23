@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 # Path to the database file in the project's root directory
-DB_FILE = Path(__file__).parent.parent / "user_activity.db"
+DB_FILE = Path(__file__).parent.parent / "data" / "user_activity.db"
 
 def init_db():
     """Initializes the database and creates tables if they don't exist."""
