@@ -12,7 +12,7 @@
 .env
 
 #databases
-#*.db
+!user_activity.db
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
