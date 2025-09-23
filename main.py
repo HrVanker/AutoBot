@@ -119,13 +119,11 @@ class RoleManagerBot(commands.Bot):
         
         
         if is_jackpot:
-            print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
             new_status = self._generate_status(jackpot=True)
             next_wait_time = random.randint(3, 5) # Short wait time for next change
             print(f"Displaying special status: {new_status} for {next_wait_time}")
 
         else:
-            print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
             new_status = self._generate_status(jackpot=False)
             next_wait_time = random.randint(1800, 5400) # 30-90 min wait time
 
@@ -133,6 +131,7 @@ class RoleManagerBot(commands.Bot):
         
         # This is the best way to handle dynamic wait times
         self.rotate_status.change_interval(seconds=next_wait_time)
+        print(f"Random int1: {rnd_int1} Random int2: {rnd_int2}")
         print(f"Status changed. Next change in {next_wait_time / 60:.2f} minutes.")
 
     # This is a good practice to ensure the bot is fully connected before the task starts
