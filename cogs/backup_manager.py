@@ -15,10 +15,10 @@ class BackupManagerCog(commands.Cog):
         self.config = self.bot.config.get("database_backup", {})
         
         # Start the scheduled backup task if it's enabled in the config
-        if self.config.get("enabled", False):
-            interval = self.config.get("interval_hours", 12)
-            self.backup_task.change_interval(hours=interval)
-            self.backup_task.start()
+        # if self.config.get("enabled", False):
+        #     interval = self.config.get("interval_hours", 12)
+        #     self.backup_task.change_interval(hours=interval)
+        #     self.backup_task.start()
 
     def cog_unload(self):
         """Clean up the task when the cog is unloaded."""

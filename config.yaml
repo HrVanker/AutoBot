@@ -20,7 +20,7 @@ auto_promotion:
       promotion_logic: "OR"
 
 database_backup:
-  enabled: true
+  enabled: false
   backup_folder: "./data/backups"
   interval_hours: 12
   copies_to_keep: 2
