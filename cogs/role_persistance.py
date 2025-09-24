@@ -78,7 +78,7 @@ class RolePersistenceCog(commands.Cog):
             # Check if this new member is a pre-approved OG.
             if member.id in known_ogs:
                 roles_to_add.append(og)
-                print(Style.Bright + Fore.LIGHTCYAN_EX + f"A new OG has joined the server: {member.name}")
+                print(Style.BRIGHT + Fore.LIGHTCYAN_EX + f"A new OG has joined the server: {member.name}")
             else:
                 if member.id in known_trolls:
                     roles_to_add.append(troll)
@@ -91,16 +91,16 @@ class RolePersistenceCog(commands.Cog):
                 role = member.guild.get_role(int(role_id_str))
                 if role and not role.is_bot_managed() and role < member.guild.me.top_role:
                     roles_to_add.append(role)
-                    print(Style.Bright + Fore.CYAN + f"A prodigal user has returned: {member.name}")
+                    print(Style.BRIGHT + Fore.CYAN + f"A prodigal user has returned: {member.name}")
         
         if roles_to_add:
             try:
                 await member.add_roles(*roles_to_add, reason="Automatic role restoration for returning member.")
-                print(Style.Bright + Fore.LIGHTYELLOW_EX + f"Restored {len(roles_to_add)} roles for returning member {member.name}.")
+                print(Style.BRIGHT + Fore.LIGHTYELLOW_EX + f"Restored {len(roles_to_add)} roles for returning member {member.name}.")
             except discord.Forbidden:
-                print(Style.Bright + Fore.LIGHTRED_EX + f"Failed to restore roles for {member.name} due to missing permissions.")
+                print(Style.BRIGHT + Fore.LIGHTRED_EX + f"Failed to restore roles for {member.name} due to missing permissions.")
             except discord.HTTPException as e:
-                print(Style.Bright + Fore.LIGHTRED_EX + f"An error occurred while restoring roles for {member.name}: {e}")
+                print(Style.BRIGHT + Fore.LIGHTRED_EX + f"An error occurred while restoring roles for {member.name}: {e}")
     
 async def setup(bot: commands.Bot):
     await bot.add_cog(RolePersistenceCog(bot))

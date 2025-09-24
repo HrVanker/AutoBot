@@ -112,7 +112,7 @@ class ActivityTrackerCog(commands.Cog):
         if not source_role_id: return
         role = member.guild.get_role(source_role_id)
         if not role:
-            print(Style.Bright + Fore.RED + f"Error: Auto-assign role with ID {source_role_id} not found.")
+            print(Style.BRIGHT + Fore.RED + f"Error: Auto-assign role with ID {source_role_id} not found.")
             return
         
         # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼

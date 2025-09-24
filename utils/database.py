@@ -30,24 +30,42 @@ def log_vc_event(user_id: int, channel_id: int, event_type: str):
         )
 
 def get_user_activity(user_id: int) -> tuple[int, int]:
-    """Retrieves a user's activity stats from the database."""
+    """
+    Calculates a user's activity stats on-the-fly from the event tables.
+    """
     with sqlite3.connect(DB_FILE) as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT message_count, vc_time_minutes FROM users WHERE user_id = ?", (user_id,))
-        result = cursor.fetchone()
-        return result if result else (0, 0)
-
-def update_user_activity(user_id: int, messages: int = 0, vc_minutes: int = 0):
-    """Updates a user's message count and/or voice channel time."""
-    with sqlite3.connect(DB_FILE) as conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
-        cursor.execute("""
-            UPDATE users
-            SET message_count = message_count + ?,
-                vc_time_minutes = vc_time_minutes + ?
-            WHERE user_id = ?
-        """, (messages, vc_minutes, user_id))
+        
+        # 1. Get total message count by counting rows
+        cursor.execute("SELECT COUNT(*) FROM messages WHERE user_id = ?", (user_id,))
+        message_count = cursor.fetchone()[0]
+        
+        # 2. Calculate total VC time by pairing join/leave events
+        cursor.execute(
+            "SELECT event_type, timestamp FROM vc_events WHERE user_id = ? ORDER BY timestamp ASC",
+            (user_id,)
+        )
+        events = cursor.fetchall()
+        
+        total_seconds = 0
+        join_time = None
+        
+        for event_type, timestamp_str in events:
+            # Parse the ISO format timestamp string into a datetime object
+            event_time = datetime.fromisoformat(timestamp_str)
+            
+            if event_type == 'join':
+                # If we see a join, record the time
+                join_time = event_time
+            elif event_type == 'leave' and join_time:
+                # If we see a leave and have a previous join time, calculate the duration
+                duration = event_time - join_time
+                total_seconds += duration.total_seconds()
+                join_time = None # Reset for the next session
+        
+        vc_time_minutes = int(total_seconds // 60)
+        
+        return message_count, vc_time_minutes
 
 # ▼▼▼ CORRECTED FUNCTIONS ▼▼▼
 
