@@ -50,7 +50,37 @@ def init_db():
                 timestamp TEXT NOT NULL
             )
         ''')
-        # No need for conn.commit() here, 'with' handles it
+        cursor.execute('''
+    CREATE TABLE IF NOT EXISTS reactions (
+        reaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        channel_id INTEGER NOT NULL,
+        message_id INTEGER NOT NULL,
+        emoji TEXT NOT NULL,
+        event_type TEXT NOT NULL, -- "add" or "remove"
+        timestamp TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS voice_state_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                channel_id INTEGER NOT NULL,
+                event_type TEXT NOT NULL, -- "mute", "unmute", "deafen", etc.
+                timestamp TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS message_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                message_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                channel_id INTEGER NOT NULL,
+                event_type TEXT NOT NULL, -- "edit" or "delete"
+                timestamp TEXT NOT NULL,
+                original_content TEXT
+            )
+        ''')
 
 def log_message(user_id: int, channel_id: int):
     """Logs a single message event to the database."""
@@ -116,4 +146,33 @@ def log_role_change(user_id: int, role_id: int, action: str, source: str):
         cursor.execute(
             "INSERT INTO role_history (user_id, role_id, action, source) VALUES (?, ?, ?, ?)",
             (user_id, role_id, action, source)
+        )
+
+def log_reaction(user_id: int, channel_id: int, message_id: int, emoji: str, event_type: str):
+    """Logs a reaction add or remove event."""
+    with sqlite3.connect(DB_FILE) as conn:
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            """INSERT INTO reactions (user_id, channel_id, message_id, emoji, event_type, timestamp) 
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (user_id, channel_id, message_id, str(emoji), event_type, timestamp)
+        )
+
+def log_voice_state_event(user_id: int, channel_id: int, event_type: str):
+    """Logs a voice state change event like mute, deafen, etc."""
+    with sqlite3.connect(DB_FILE) as conn:
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO voice_state_events (user_id, channel_id, event_type, timestamp) VALUES (?, ?, ?, ?)",
+            (user_id, channel_id, event_type, timestamp)
+        )
+
+def log_message_event(message_id: int, user_id: int, channel_id: int, event_type: str, content: str = None):
+    """Logs a message edit or delete event."""
+    with sqlite3.connect(DB_FILE) as conn:
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            """INSERT INTO message_events (message_id, user_id, channel_id, event_type, timestamp, original_content) 
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (message_id, user_id, channel_id, event_type, timestamp, content)
         )
