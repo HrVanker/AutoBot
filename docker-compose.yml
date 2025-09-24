@@ -27,4 +27,4 @@ services:
 # Declare both named volumes here.
 volumes:
   autobot-db:
-  autobot-backups:    
+  autobot-backups:
