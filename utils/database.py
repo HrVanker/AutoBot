@@ -1,6 +1,7 @@
 ﻿import sqlite3
 from pathlib import Path
 from typing import List
+from datetime import datetime
 
 # Path to the database file in the project's root directory
 DB_FILE = Path(__file__).parent.parent / "data" / "user_activity.db"
@@ -32,7 +33,42 @@ def init_db():
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS messages (
+                message_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                channel_id INTEGER NOT NULL,
+                timestamp TEXT NOT NULL
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS vc_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                channel_id INTEGER NOT NULL,
+                event_type TEXT NOT NULL, -- "join" or "leave"
+                timestamp TEXT NOT NULL
+            )
+        ''')
         # No need for conn.commit() here, 'with' handles it
+
+def log_message(user_id: int, channel_id: int):
+    """Logs a single message event to the database."""
+    with sqlite3.connect(DB_FILE) as conn:
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO messages (user_id, channel_id, timestamp) VALUES (?, ?, ?)",
+            (user_id, channel_id, timestamp)
+        )
+
+def log_vc_event(user_id: int, channel_id: int, event_type: str):
+    """Logs a voice channel join or leave event."""
+    with sqlite3.connect(DB_FILE) as conn:
+        timestamp = datetime.utcnow().isoformat()
+        conn.execute(
+            "INSERT INTO vc_events (user_id, channel_id, event_type, timestamp) VALUES (?, ?, ?, ?)",
+            (user_id, channel_id, event_type, timestamp)
+        )
 
 def get_user_activity(user_id: int) -> tuple[int, int]:
     """Retrieves a user's activity stats from the database."""
