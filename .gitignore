@@ -3,6 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 docker-compose.yml
+backup_manager.py
 # User-specific files
 *.rsuser
 *.suo

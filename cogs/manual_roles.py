@@ -2,6 +2,7 @@
 from discord.ext import commands
 from discord import app_commands
 # We no longer need to import log_action here
+from utils.logger import log_action
 from utils.role_utils import handle_role_add 
 from utils import database
 
@@ -44,8 +45,8 @@ class ManualRolesCog(commands.Cog):
         await interaction.followup.send(f"✅ Successfully scanned and saved roles for {member_count} members.")
 
     @role_group.command(name="add", description="Add a role to a user.")
-    @app_commands.describe(user="The user to add the role to.", role="The role to add.")
-    async def add_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role):
+    @app_commands.describe(user="The user to add the role to.", role="The role to add.", reason="Why you do like that?")
+    async def add_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role, reason: str = None):
         if not self.is_moderator(interaction):
             await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
             return
@@ -56,28 +57,44 @@ class ManualRolesCog(commands.Cog):
                 ephemeral=True
             )
             return
-        
-        # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼
-        reason_text = f"Role change initiated by {interaction.user.name}"
-        await handle_role_add(
-            bot=self.bot, 
-            member=user, 
-            role_to_add=role, 
-            reason=reason_text,
-            log_title="Manual Role Change", # New title
-            log_responsible_party=interaction.user.mention # Pass who did it
-        )
-        # ▲▲▲ CONSOLIDATED LOGGING CALL ▲▲▲
 
-        await interaction.response.send_message(f"Successfully processed the **{role.name}** role for {user.mention}.", ephemeral=True)
-        # The separate log_action call that was here has been REMOVED.
+        try:
+            await user.add_roles(role, reason=reason)
+        
+            # ▼▼▼ CONSOLIDATED LOGGING CALL ▼▼▼
+            source_text = f"Moderator ({interaction.user.mention})"
+            if reason:
+                source_text += f" - Reason: {reason}"
+
+            database.log_role_change(
+                user_id=user.id,
+                role_id=role.id,
+                action="added",
+                source=source_text
+            )
+            details_text = f"**Role:** {role.mention}"
+            if reason:
+                details_text += f"\n**Reason:** {reason}"
+            
+            await log_action(
+                bot=self.bot,
+                title="Manual Role Added",
+                target_user=user,
+                responsible_party=interaction.user.mention, # Use the moderator who ran the command
+                details=details_text
+            )
+        
+            await interaction.response.send_message(f"Successfully added the **{role.name}** role to {user.mention}.", ephemeral=True)
+
+        except Exception as e:
+            await interaction.response.send_message(f"An unexpected error occurred: {e}", ephemeral=True)
     
     # The 'remove_role' command does not need to change
     @role_group.command(name="remove", description="Remove a role from a user.")
-    @app_commands.describe(user="The user to remove the role from.", role="The role to remove.")
-    async def remove_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role):
+    @app_commands.describe(user="The user to remove the role from.", role="The role to remove.", reason="Why, though?")
+    async def remove_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role, reason: str = None):
         # (This function remains unchanged, as it only removes roles, no toggling)
-        from utils.logger import log_action # We need it here now
+        #from utils.logger import log_action # We need it here now
         if not self.is_moderator(interaction):
             await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
             return
@@ -90,15 +107,30 @@ class ManualRolesCog(commands.Cog):
             return
 
         try:
-            await user.remove_roles(role, reason=f"Role removed by {interaction.user.name}")
+            await user.remove_roles(role, reason=reason)
             await interaction.response.send_message(f"Successfully removed the **{role.name}** role from {user.mention}.", ephemeral=True)
             
+            # Construct the detailed source string for our database
+            source_text = f"Moderator ({interaction.user.mention})"
+            if reason:
+                source_text += f" - Reason: {reason}"
+            
+            database.log_role_change(
+                user_id=user.id,
+                role_id=role.id,
+                action="removed",
+                source=source_text
+            )
+            details_text = f"**Role:** {role.mention}"
+            if reason:
+                details_text += f"\n**Reason:** {reason}"
+
             await log_action(
                 bot=self.bot,
                 title="Manual Role Removed",
                 target_user=user,
-                responsible_party=interaction.user.mention,
-                details=f"Removed Role: {role.mention}"
+                responsible_party=interaction.user.mention, # Use the moderator who ran the command
+                details=details_text
             )
         except discord.Forbidden:
             await interaction.response.send_message("I don't have the necessary permissions to remove that role.", ephemeral=True)

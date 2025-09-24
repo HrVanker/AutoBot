@@ -1,3 +1,4 @@
 .db
 .git
 .json
+backup_manager.py
