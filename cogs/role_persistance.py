@@ -5,6 +5,8 @@ import yaml
 import colorama
 from utils import database # Make sure your database functions are accessible
 from colorama import Fore, Style, init
+
+from utils.logger import log_action
 colorama.init(autoreset=True)
 
 class RolePersistenceCog(commands.Cog):
@@ -69,7 +71,7 @@ class RolePersistenceCog(commands.Cog):
         known_trolls = known_users.get("known_trolls", [])
         known_trolls = [item['id'] for item in known_trolls]
         og = member.guild.get_role(1404606604795449364)
-        troll = member.guild.get_role(1417643738770968606)
+        troll = member.guild.get_role(1420533874513018960)
         roles_to_add = []
         
         saved_roles = database.get_user_roles(member.id)
@@ -79,10 +81,24 @@ class RolePersistenceCog(commands.Cog):
             if member.id in known_ogs:
                 roles_to_add.append(og)
                 print(Style.BRIGHT + Fore.LIGHTCYAN_EX + f"A new OG has joined the server: {member.name}")
+                await log_action(
+                    bot=self.bot,
+                    title="Known User:",
+                    target_user=member,
+                    responsible_party="<@1403454465268252723>", # Use the moderator who ran the command
+                    details=f"Role: {roles_to_add}"
+                )
             else:
                 if member.id in known_trolls:
                     roles_to_add.append(troll)
                     print(Style.BRIGHT + Fore.LIGHTYELLOW_EX + f"A known troll has joined the server: {member.name}")
+                    await log_action(
+                        bot=self.bot,
+                        title="Known User:",
+                        target_user=member,
+                        responsible_party="<@1403454465268252723>", # Use the moderator who ran the command
+                        details=f"Role: {roles_to_add}"
+                    )
 
         # Path B: User HAS saved roles (they are a returning member).
         # The 'if' block above is skipped, and the code continues here.
@@ -92,6 +108,14 @@ class RolePersistenceCog(commands.Cog):
                 if role and not role.is_bot_managed() and role < member.guild.me.top_role:
                     roles_to_add.append(role)
                     print(Style.BRIGHT + Fore.CYAN + f"A prodigal user has returned: {member.name}")
+                    await log_action(
+                        bot=self.bot,
+                        title="Known User:",
+                        target_user=member,
+                        responsible_party="<@1403454465268252723>", # Use the moderator who ran the command
+                        details=f"Roles: {roles_to_add}"
+                    )
+
         
         if roles_to_add:
             try:
