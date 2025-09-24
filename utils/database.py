@@ -2,85 +2,14 @@
 from pathlib import Path
 from typing import List
 from datetime import datetime
+from utils import schema
 
 # Path to the database file in the project's root directory
-DB_FILE = Path(__file__).parent.parent / "data" / "user_activity.db"
+DB_FILE = Path("/data/server_activity.db")
 
 def init_db():
-    """Initializes the database and creates tables if they don't exist."""
-    with sqlite3.connect(DB_FILE) as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS users (
-                user_id INTEGER PRIMARY KEY,
-                message_count INTEGER DEFAULT 0,
-                vc_time_minutes INTEGER DEFAULT 0
-            )
-        """)
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS user_roles (
-                user_id INTEGER PRIMARY KEY,
-                role_ids TEXT
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS role_history (
-                log_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
-                role_id INTEGER,
-                action TEXT,
-                source TEXT,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS messages (
-                message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                channel_id INTEGER NOT NULL,
-                timestamp TEXT NOT NULL
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS vc_events (
-                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                channel_id INTEGER NOT NULL,
-                event_type TEXT NOT NULL, -- "join" or "leave"
-                timestamp TEXT NOT NULL
-            )
-        ''')
-        cursor.execute('''
-    CREATE TABLE IF NOT EXISTS reactions (
-        reaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        channel_id INTEGER NOT NULL,
-        message_id INTEGER NOT NULL,
-        emoji TEXT NOT NULL,
-        event_type TEXT NOT NULL, -- "add" or "remove"
-        timestamp TEXT NOT NULL
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS voice_state_events (
-                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                channel_id INTEGER NOT NULL,
-                event_type TEXT NOT NULL, -- "mute", "unmute", "deafen", etc.
-                timestamp TEXT NOT NULL
-            )
-        ''')
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS message_events (
-                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                message_id INTEGER NOT NULL,
-                user_id INTEGER NOT NULL,
-                channel_id INTEGER NOT NULL,
-                event_type TEXT NOT NULL, -- "edit" or "delete"
-                timestamp TEXT NOT NULL,
-                original_content TEXT
-            )
-        ''')
+    """Initializes the database using the centralized schema."""
+    schema.initialize_database()
 
 def log_message(user_id: int, channel_id: int):
     """Logs a single message event to the database."""
