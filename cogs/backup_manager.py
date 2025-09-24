@@ -59,22 +59,22 @@ class BackupManagerCog(commands.Cog):
             print(Style.BRIGHT + Fore.YELLOW + f"Database backup failed: {e}")
             return False, str(e)
 
-    @tasks.loop(hours=12)
-    async def backup_task(self):
-        """The scheduled task that runs automatically."""
-        print(Style.DIM + Fore.YELLOW + f"Running scheduled database backup...")
-        self.perform_backup()
+    # @tasks.loop(hours=12)
+    # async def backup_task(self):
+    #     """The scheduled task that runs automatically."""
+    #     print(Style.DIM + Fore.YELLOW + f"Running scheduled database backup...")
+    #     self.perform_backup()
 
-    @app_commands.command(name="backup-db", description="Manually triggers a database backup.")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def backup_db(self, interaction: discord.Interaction):
-        """A command for admins to manually create a backup."""
-        await interaction.response.defer(ephemeral=True)
-        success, message = self.perform_backup()
-        if success:
-            await interaction.followup.send(f"✅ Backup successful! {message}")
-        else:
-            await interaction.followup.send(f"❌ Backup failed! Reason: {message}")
+    # @app_commands.command(name="backup-db", description="Manually triggers a database backup.")
+    # @app_commands.checks.has_permissions(administrator=True)
+    # async def backup_db(self, interaction: discord.Interaction):
+    #     """A command for admins to manually create a backup."""
+    #     await interaction.response.defer(ephemeral=True)
+    #     success, message = self.perform_backup()
+    #     if success:
+    #         await interaction.followup.send(f"✅ Backup successful! {message}")
+    #     else:
+    #         await interaction.followup.send(f"❌ Backup failed! Reason: {message}")
 
 
 async def setup(bot: commands.Bot):
