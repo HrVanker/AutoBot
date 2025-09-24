@@ -21,7 +21,7 @@ auto_promotion:
 
 database_backup:
   enabled: true
-  backup_folder: "./backups"
+  backup_folder: "./data/backups"
   interval_hours: 12
   copies_to_keep: 2
 
