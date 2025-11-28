@@ -1,4 +1,5 @@
 ﻿import discord
+import asyncio
 from discord.ext import commands
 from datetime import datetime
 from utils import database
@@ -23,7 +24,7 @@ class ActivityTrackerCog(commands.Cog):
         promotion_rules = self.config.get("promotions", [])
     
         # Get the user's current activity stats once
-        message_count, vc_time = database.get_user_activity(member.id)
+        message_count, vc_time = await asyncio.to_thread(database.get_user_activity, member.id)
 
         # Loop through each rule in the config
         for rule in promotion_rules:
@@ -78,18 +79,18 @@ class ActivityTrackerCog(commands.Cog):
         if message.author.bot or not message.guild or message.content.startswith('/'): 
             return
         
-        database.log_message(message.author.id, message.channel.id)
+        await asyncio.to_thread(database.log_message, message.author.id, message.channel.id)
         await self._check_promotion(message.author)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         # Log a "join" event
         if before.channel is None and after.channel is not None:
-            database.log_vc_event(member.id, after.channel.id, "join")
+            await asyncio.to_thread(database.log_vc_event, member.id, after.channel.id, "join")
 
         # Log a "leave" event
         elif before.channel is not None and after.channel is None:
-            database.log_vc_event(member.id, before.channel.id, "leave")
+            await asyncio.to_thread(database.log_vc_event, member.id, before.channel.id, "leave")
             await self._check_promotion(member)
 
         # ▼▼▼ EXPANDED LOGIC FOR VOICE STATES ▼▼▼
@@ -97,13 +98,13 @@ class ActivityTrackerCog(commands.Cog):
             channel = after.channel # or before.channel, they are the same here
             if before.self_mute != after.self_mute:
                 event = "mute" if after.self_mute else "unmute"
-                database.log_voice_state_event(member.id, channel.id, event)
+                await asyncio.to_thread(database.log_voice_state_event, member.id, channel.id, event)
             elif before.self_deaf != after.self_deaf:
                 event = "deafen" if after.self_deaf else "undeafen"
-                database.log_voice_state_event(member.id, channel.id, event)
+                await asyncio.to_thread(database.log_voice_state_event, member.id, channel.id, event)
             elif before.self_stream != after.self_stream:
                 event = "stream_start" if after.self_stream else "stream_stop"
-                database.log_voice_state_event(member.id, channel.id, event)
+                await asyncio.to_thread(database.log_voice_state_event, member.id, channel.id, event)
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
@@ -132,7 +133,7 @@ class ActivityTrackerCog(commands.Cog):
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
         if before.author.bot or not before.guild or before.content == after.content:
             return
-        database.log_message_event(
+        await asyncio.to_thread(database.log_message_event, 
             before.id, before.author.id, before.channel.id, "edit", content=before.content
         )
 
@@ -141,7 +142,7 @@ class ActivityTrackerCog(commands.Cog):
     async def on_message_delete(self, message: discord.Message):
         if message.author.bot or not message.guild:
             return
-        database.log_message_event(
+        await asyncio.to_thread(database.log_message_event, 
             message.id, message.author.id, message.channel.id, "delete"
         )
     
@@ -150,7 +151,7 @@ class ActivityTrackerCog(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         if user.bot or not reaction.message.guild:
             return
-        database.log_reaction(
+        await asyncio.to_thread(database.log_reaction, 
             user.id, reaction.message.channel.id, reaction.message.id, reaction.emoji, "add"
         )
 
@@ -158,7 +159,7 @@ class ActivityTrackerCog(commands.Cog):
     async def on_reaction_remove(self, reaction: discord.Reaction, user: discord.Member):
         if user.bot or not reaction.message.guild:
             return
-        database.log_reaction(
+        await asyncio.to_thread(database.log_reaction, 
             user.id, reaction.message.channel.id, reaction.message.id, reaction.emoji, "remove"
         )
 

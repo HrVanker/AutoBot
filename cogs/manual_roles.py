@@ -1,4 +1,5 @@
 ﻿import discord
+import asyncio
 from discord.ext import commands
 from discord import app_commands
 # We no longer need to import log_action here
@@ -39,7 +40,7 @@ class ManualRolesCog(commands.Cog):
         
             # Save them to the database
             if current_role_ids:
-                database.update_user_roles(member.id, current_role_ids)
+                await asyncio.to_thread(database.update_user_roles, member.id, current_role_ids)
                 member_count += 1
                 
         await interaction.followup.send(f"✅ Successfully scanned and saved roles for {member_count} members.")
@@ -68,7 +69,8 @@ class ManualRolesCog(commands.Cog):
             if reason:
                 source_text += f" - Reason: {reason}"
 
-            database.log_role_change(
+            await asyncio.to_thread(
+                database.log_role_change,
                 user_id=user.id,
                 role_id=role.id,
                 action="added",
@@ -117,7 +119,8 @@ class ManualRolesCog(commands.Cog):
             if reason:
                 source_text += f" - Reason: {reason}"
             
-            database.log_role_change(
+            await asyncio.to_thread(
+                database.log_role_change,
                 user_id=user.id,
                 role_id=role.id,
                 action="removed",
