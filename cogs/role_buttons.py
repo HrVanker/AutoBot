@@ -40,11 +40,12 @@ class RoleButtonView(discord.ui.View):
     async def handle_button_click(self, interaction: discord.Interaction):
         """This function is called when any button in the view is clicked."""
         # Get the role ID from the button's custom_id
+        await interaction.response.defer(ephemeral=True)
         role_id = int(interaction.data["custom_id"].split("_")[-1])
         role = interaction.guild.get_role(role_id)
         
         if not role:
-            await interaction.response.send_message("Error: This role no longer exists.", ephemeral=True)
+            await interaction.followup.send("Error: This role no longer exists.", ephemeral=True)
             return
 
         # Check if the user already has the role
@@ -54,13 +55,13 @@ class RoleButtonView(discord.ui.View):
             if has_role:
                 # If they have it, remove it
                 await interaction.user.remove_roles(role, reason="Self-assigned role removal")
-                await interaction.response.send_message(f"✅ The **{role.name}** role has been removed.", ephemeral=True)
+                await interaction.followup.send(f"✅ The **{role.name}** role has been removed.", ephemeral=True)
             else:
                 # If they don't, add it
                 await interaction.user.add_roles(role, reason="Self-assigned role")
-                await interaction.response.send_message(f"✅ You've been given the **{role.name}** role!", ephemeral=True)
+                await interaction.followup.send(f"✅ You've been given the **{role.name}** role!", ephemeral=True)
         except discord.Forbidden:
-            await interaction.response.send_message("❌ I don't have permission to modify your roles.", ephemeral=True)
+            await interaction.followup.send("❌ I don't have permission to modify your roles.", ephemeral=True)
 
 
 class RoleButtonCog(commands.Cog):
@@ -75,21 +76,23 @@ class RoleButtonCog(commands.Cog):
     @app_commands.checks.has_permissions(manage_roles=True)
     async def post_roles(self, interaction: discord.Interaction):
         """A moderator command to post the role selection panel."""
+        await interaction.response.defer(ephemeral=True)
+
         config = self.bot.config.get("self_assign_roles", {})
         target_channel_id = int(config.get("channel_id", 0))
         
         if not target_channel_id:
-            await interaction.response.send_message("The `self_assign_roles` configuration is missing in `config.json`.", ephemeral=True)
+            await interaction.followup.send("The `self_assign_roles` configuration is missing in `config.json`.", ephemeral=True)
             return
 
         target_channel = self.bot.get_channel(target_channel_id)
         if not target_channel:
-            await interaction.response.send_message(f"Error: Channel with ID `{target_channel_id}` not found.", ephemeral=True)
+            await interaction.followup.send(f"Error: Channel with ID `{target_channel_id}` not found.", ephemeral=True)
             return
             
         role_configs = config.get("roles", [])
         if not role_configs:
-            await interaction.response.send_message("No roles are configured in the `self_assign_roles` section.", ephemeral=True)
+            await interaction.followup.send("No roles are configured in the `self_assign_roles` section.", ephemeral=True)
             return
 
         # Create the embed and the view
@@ -102,9 +105,9 @@ class RoleButtonCog(commands.Cog):
         
         try:
             await target_channel.send(embed=embed, view=view)
-            await interaction.response.send_message(f"✅ Role message has been posted in {target_channel.mention}.", ephemeral=True)
+            await interaction.followup.send(f"✅ Role message has been posted in {target_channel.mention}.", ephemeral=True)
         except discord.Forbidden:
-            await interaction.response.send_message("❌ I don't have permission to send messages in that channel.", ephemeral=True)
+            await interaction.followup.send("❌ I don't have permission to send messages in that channel.", ephemeral=True)
 
 
 async def setup(bot: commands.Bot):

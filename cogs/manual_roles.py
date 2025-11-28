@@ -47,12 +47,14 @@ class ManualRolesCog(commands.Cog):
     @role_group.command(name="add", description="Add a role to a user.")
     @app_commands.describe(user="The user to add the role to.", role="The role to add.", reason="Why you do like that?")
     async def add_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role, reason: str = None):
+        await interaction.response.defer(ephemeral=True)
+
         if not self.is_moderator(interaction):
-            await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
+            await interaction.followup.send("You don't have permission to use this command.", ephemeral=True)
             return
 
         if role >= interaction.guild.me.top_role:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"I can't assign the **{role.name}** role because it is higher than or equal to my highest role.",
                 ephemeral=True
             )
@@ -84,23 +86,23 @@ class ManualRolesCog(commands.Cog):
                 details=details_text
             )
         
-            await interaction.response.send_message(f"Successfully added the **{role.name}** role to {user.mention}.", ephemeral=True)
+            await interaction.followup.send(f"Successfully added the **{role.name}** role to {user.mention}.", ephemeral=True)
 
         except Exception as e:
-            await interaction.response.send_message(f"An unexpected error occurred: {e}", ephemeral=True)
+            await interaction.followup.send(f"An unexpected error occurred: {e}", ephemeral=True)
     
     # The 'remove_role' command does not need to change
     @role_group.command(name="remove", description="Remove a role from a user.")
     @app_commands.describe(user="The user to remove the role from.", role="The role to remove.", reason="Why, though?")
     async def remove_role(self, interaction: discord.Interaction, user: discord.Member, role: discord.Role, reason: str = None):
-        # (This function remains unchanged, as it only removes roles, no toggling)
-        #from utils.logger import log_action # We need it here now
+        await interaction.response.defer(ephemeral=True)
+
         if not self.is_moderator(interaction):
-            await interaction.response.send_message("You don't have permission to use this command.", ephemeral=True)
+            await interaction.followup.send("You don't have permission to use this command.", ephemeral=True)
             return
             
         if role >= interaction.guild.me.top_role:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"I can't remove the **{role.name}** role because it is higher than or equal to my highest role.",
                 ephemeral=True
             )
@@ -108,7 +110,7 @@ class ManualRolesCog(commands.Cog):
 
         try:
             await user.remove_roles(role, reason=reason)
-            await interaction.response.send_message(f"Successfully removed the **{role.name}** role from {user.mention}.", ephemeral=True)
+            await interaction.followup.send(f"Successfully removed the **{role.name}** role from {user.mention}.", ephemeral=True)
             
             # Construct the detailed source string for our database
             source_text = f"Moderator ({interaction.user.mention})"
@@ -133,9 +135,9 @@ class ManualRolesCog(commands.Cog):
                 details=details_text
             )
         except discord.Forbidden:
-            await interaction.response.send_message("I don't have the necessary permissions to remove that role.", ephemeral=True)
+            await interaction.followup.send("I don't have the necessary permissions to remove that role.", ephemeral=True)
         except Exception as e:
-            await interaction.response.send_message(f"An unexpected error occurred: {e}", ephemeral=True)
+            await interaction.followup.send(f"An unexpected error occurred: {e}", ephemeral=True)
 
 
 async def setup(bot: commands.Bot):
