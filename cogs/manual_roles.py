@@ -22,6 +22,12 @@ class ManualRolesCog(commands.Cog):
             return True
         return False
 
+    @app_commands.command(name="ping", description="Check the bot's latency.")
+    async def ping(self, interaction: discord.Interaction):
+        # We don't defer here because we want to measure the raw speed
+        latency_ms = round(self.bot.latency * 1000)
+        await interaction.response.send_message(f"🏓 Pong! Latency: {latency_ms}ms")
+
     @app_commands.command(name="rebuild-roles-db", description="Scans all members and populates the role database.")
     @app_commands.checks.has_permissions(administrator=True)
     async def rebuild_roles(self, interaction: discord.Interaction):

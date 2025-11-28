@@ -9,6 +9,9 @@ DB_FILE = Path("/data/server_activity.db")
 
 def init_db():
     """Initializes the database using the centralized schema."""
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.execute("PRAGMA journal_mode=WAL;")
+
     schema.initialize_database()
 
 def log_message(user_id: int, channel_id: int):
