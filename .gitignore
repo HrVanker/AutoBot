@@ -10,7 +10,7 @@ backup_manager.py
 *.user
 *.userosscache
 *.sln.docstates
-.env
+#.env
 
 #databases
 !user_activity.db
