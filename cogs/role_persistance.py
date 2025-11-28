@@ -25,7 +25,7 @@ class RolePersistenceCog(commands.Cog):
         # --- Update the current set of roles for the user ---
         # Get a list of all current role IDs as strings
         current_role_ids = [str(role.id) for role in after.roles if role.name != "@everyone"]
-        database.update_user_roles(after.id, current_role_ids)
+        await asyncio.to_thread(database.update_user_roles, after.id, current_role_ids)
 
         # --- Determine what changed and log it to history ---
         before_roles = set(before.roles)
@@ -53,11 +53,11 @@ class RolePersistenceCog(commands.Cog):
 
         # Log added roles
         for role in added_roles:
-            database.log_role_change(user_id=after.id, role_id=role.id, action="added", source=source)
+            await asyncio.to_thread(database.log_role_change, user_id=after.id, role_id=role.id, action="added", source=source)
 
         # Log removed roles
         for role in removed_roles:
-            database.log_role_change(user_id=after.id, role_id=role.id, action="removed", source=source)
+            await asyncio.to_thread(database.log_role_change, user_id=after.id, role_id=role.id, action="removed", source=source)
 
 
     @commands.Cog.listener()
@@ -74,7 +74,7 @@ class RolePersistenceCog(commands.Cog):
         troll = member.guild.get_role(1420533874513018960)
         roles_to_add = []
         
-        saved_roles = database.get_user_roles(member.id)
+        saved_roles = await asyncio.to_thread(database.get_user_roles, member.id)
         # Path A: User has NO saved roles (they are a new member).
         if not saved_roles:
             # Check if this new member is a pre-approved OG.

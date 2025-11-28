@@ -20,9 +20,9 @@ auto_promotion:
       promotion_logic: "OR"
 
 database_backup:
-  enabled: false
-  backup_folder: "./data/backups"
-  interval_hours: 12
+  enabled: enabled
+  backup_folder: "/data/backups"
+  interval_hours: 24
   copies_to_keep: 2
 
 role_directory:
@@ -149,7 +149,6 @@ known_users:
       - id: 1156611167842746468 #Kyrie, Sharmat, etc.
       - id: 1196940904985002121 #Klein
       - id: 954106798229557358 #Jane
-      - id: 849452589039878165 #Haydi
       - id: 1120861979716894752 #Bart
       - id: 910261439137202217 #JohnLee
       - id: 1258380370601181265 #JohnLeeAlt
@@ -161,7 +160,6 @@ known_users:
       - id: 1205278046383382619 #AndrewRALT
       - id: 740021279137988660 #Rab
       - id: 873129829875212318 #AndrewR
-      - id: 174647870475993088 #Jovonn
       - id: 908559689980194886 #SkinnyPete
       - id: 1031424614225678456 #Moe
       - id: 1043770932281479198 #Shae
@@ -176,12 +174,9 @@ known_users:
       - id: 114859744048578560 #Danny
       - id: 292797656344821762 #Detroyer
       - id: 776196083369639966 #Turok
-      - id: 849452589039878165 #Haydi
       - id: 863183798576742420 #chad
-      - id: 420975898741833759 #JD
       - id: 293555257722667008 #DGH
       - id: 1029168679360929892 #AP
       - id: 1297411262077997107 #Bernie
       - id: 734119920555786323 #NinjaBemLite
-      - id: 421058542582366208 #Scott Preston
       - id: 186977708390088705 #Hiwa
